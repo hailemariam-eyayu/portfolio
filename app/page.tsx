@@ -185,47 +185,122 @@ export default function Home() {
 
             <section
               id="skills"
-              className="bg-white p-6 rounded-lg shadow w-full max-w-3xl mb-10"
+              className="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl mb-10"
+              data-aos="fade-up"
             >
-              <h3 className="text-2xl font-semibold text-blue-600 border-b-2 border-blue-500 pb-1 mb-4">
-                Skills
+              <h3 className="text-3xl font-bold text-blue-600 border-b-2 border-blue-500 pb-2 mb-6">
+                Skills & Expertise
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <h4 className="font-semibold text-gray-700 mb-2">Frontend</h4>
-                  <ul className="list-disc list-inside space-y-1 text-sm">
-                    <li>React & Next.js</li>
-                    <li>TypeScript & JavaScript</li>
-                    <li>Tailwind CSS & Bootstrap</li>
-                    <li>Responsive & Accessible Design</li>
-                  </ul>
+              
+              {/* Languages & Frameworks */}
+              <div className="mb-8">
+                <h4 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                  <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm mr-3">
+                    Languages & Frameworks
+                  </span>
+                </h4>
+                <div className="space-y-4">
+                  {[
+                    { name: "JavaScript / TypeScript", level: 90, color: "bg-yellow-500" },
+                    { name: "React & Next.js", level: 85, color: "bg-blue-500" },
+                    { name: "Node.js & Express", level: 80, color: "bg-green-500" },
+                    { name: "PHP & Laravel", level: 75, color: "bg-purple-500" },
+                    { name: "Dart & Flutter", level: 70, color: "bg-cyan-500" },
+                  ].map((skill) => (
+                    <div key={skill.name} className="group">
+                      <div className="flex justify-between mb-1">
+                        <span className="text-sm font-medium text-gray-700">{skill.name}</span>
+                        <span className="text-sm font-semibold text-gray-600">{skill.level}%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                        <div
+                          className={`${skill.color} h-3 rounded-full transition-all duration-1000 ease-out group-hover:opacity-80`}
+                          style={{ width: mounted ? `${skill.level}%` : "0%" }}
+                        />
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <div>
-                  <h4 className="font-semibold text-gray-700 mb-2">Backend</h4>
-                  <ul className="list-disc list-inside space-y-1 text-sm">
-                    <li>Node.js & Express</li>
-                    <li>Laravel & PHP</li>
-                    <li>MongoDB & MySQL</li>
-                    <li>RESTful APIs</li>
-                  </ul>
+              </div>
+
+              {/* Mobile Development */}
+              <div className="mb-8">
+                <h4 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                  <span className="bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm mr-3">
+                    Mobile Development
+                  </span>
+                </h4>
+                <div className="space-y-4">
+                  {[
+                    { name: "React Native & Expo", level: 85, color: "bg-blue-600" },
+                    { name: "Flutter", level: 70, color: "bg-cyan-600" },
+                    { name: "Cross-platform Development", level: 80, color: "bg-indigo-600" },
+                    { name: "Mobile UI/UX Design", level: 75, color: "bg-pink-600" },
+                  ].map((skill) => (
+                    <div key={skill.name} className="group">
+                      <div className="flex justify-between mb-1">
+                        <span className="text-sm font-medium text-gray-700">{skill.name}</span>
+                        <span className="text-sm font-semibold text-gray-600">{skill.level}%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                        <div
+                          className={`${skill.color} h-3 rounded-full transition-all duration-1000 ease-out group-hover:opacity-80`}
+                          style={{ width: mounted ? `${skill.level}%` : "0%" }}
+                        />
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <div>
-                  <h4 className="font-semibold text-gray-700 mb-2">Mobile</h4>
-                  <ul className="list-disc list-inside space-y-1 text-sm">
-                    <li>React Native & Expo</li>
-                    <li>Flutter & Dart</li>
-                    <li>Cross-platform Development</li>
-                    <li>Mobile UI/UX</li>
-                  </ul>
+              </div>
+
+              {/* Databases & Tools */}
+              <div className="mb-8">
+                <h4 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                  <span className="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-sm mr-3">
+                    Databases & DevOps
+                  </span>
+                </h4>
+                <div className="space-y-4">
+                  {[
+                    { name: "MongoDB", level: 80, color: "bg-green-600" },
+                    { name: "MySQL", level: 75, color: "bg-blue-700" },
+                    { name: "Git & GitHub", level: 90, color: "bg-gray-700" },
+                    { name: "CI/CD (GitHub Actions)", level: 75, color: "bg-purple-600" },
+                    { name: "Vercel & Cloud Deployment", level: 80, color: "bg-black" },
+                  ].map((skill) => (
+                    <div key={skill.name} className="group">
+                      <div className="flex justify-between mb-1">
+                        <span className="text-sm font-medium text-gray-700">{skill.name}</span>
+                        <span className="text-sm font-semibold text-gray-600">{skill.level}%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                        <div
+                          className={`${skill.color} h-3 rounded-full transition-all duration-1000 ease-out group-hover:opacity-80`}
+                          style={{ width: mounted ? `${skill.level}%` : "0%" }}
+                        />
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <div>
-                  <h4 className="font-semibold text-gray-700 mb-2">DevOps & Tools</h4>
-                  <ul className="list-disc list-inside space-y-1 text-sm">
-                    <li>Git & GitHub</li>
-                    <li>GitHub Actions (CI/CD)</li>
-                    <li>Vercel & Cloud Deployment</li>
-                    <li>Agile & Scrum</li>
-                  </ul>
+              </div>
+
+              {/* Skills Summary */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-6 border-t border-gray-200">
+                <div className="text-center p-4 bg-blue-50 rounded-lg">
+                  <div className="text-3xl font-bold text-blue-600">3+</div>
+                  <div className="text-sm text-gray-600 mt-1">Years Experience</div>
+                </div>
+                <div className="text-center p-4 bg-green-50 rounded-lg">
+                  <div className="text-3xl font-bold text-green-600">15+</div>
+                  <div className="text-sm text-gray-600 mt-1">Technologies</div>
+                </div>
+                <div className="text-center p-4 bg-purple-50 rounded-lg">
+                  <div className="text-3xl font-bold text-purple-600">6+</div>
+                  <div className="text-sm text-gray-600 mt-1">Projects</div>
+                </div>
+                <div className="text-center p-4 bg-orange-50 rounded-lg">
+                  <div className="text-3xl font-bold text-orange-600">4</div>
+                  <div className="text-sm text-gray-600 mt-1">Platforms</div>
                 </div>
               </div>
             </section>
