@@ -171,11 +171,17 @@ export default function Home() {
               <h3 className="text-2xl font-semibold text-blue-600 border-b-2 border-blue-500 pb-1 mb-4">
                 About Me
               </h3>
-              <p>
+              <p className="mb-3">
                 With over 3 years of experience, I have developed a deep
                 understanding of modern technologies including Flutter, Laravel,
                 React, Node.js, and PHP. I am a strong advocate of clean code,
                 user-centered design, and continuous learning.
+              </p>
+              <p>
+                Recently, I developed Gitsawe - a comprehensive multi-platform Ethiopian Orthodox Church application 
+                featuring a full-stack web app (React, Node.js, MongoDB) and three mobile implementations 
+                (Expo, Flutter, React Native). The project showcases my expertise in building scalable, 
+                cross-platform solutions with modern CI/CD practices.
               </p>
             </section>
 
@@ -186,14 +192,44 @@ export default function Home() {
               <h3 className="text-2xl font-semibold text-blue-600 border-b-2 border-blue-500 pb-1 mb-4">
                 Skills
               </h3>
-              <ul className="list-disc list-inside space-y-1">
-                <li>Flutter & Dart (Mobile & Web Apps)</li>
-                <li>Laravel, PHP & MySQL (Backend & APIs)</li>
-                <li>React & Next.js (Frontend Web Apps)</li>
-                <li>JavaScript, TypeScript, Node.js</li>
-                <li>UI/UX Design, Responsive & Accessible Design</li>
-                <li>Git, CI/CD, Agile & Scrum</li>
-              </ul>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h4 className="font-semibold text-gray-700 mb-2">Frontend</h4>
+                  <ul className="list-disc list-inside space-y-1 text-sm">
+                    <li>React & Next.js</li>
+                    <li>TypeScript & JavaScript</li>
+                    <li>Tailwind CSS & Bootstrap</li>
+                    <li>Responsive & Accessible Design</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-700 mb-2">Backend</h4>
+                  <ul className="list-disc list-inside space-y-1 text-sm">
+                    <li>Node.js & Express</li>
+                    <li>Laravel & PHP</li>
+                    <li>MongoDB & MySQL</li>
+                    <li>RESTful APIs</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-700 mb-2">Mobile</h4>
+                  <ul className="list-disc list-inside space-y-1 text-sm">
+                    <li>React Native & Expo</li>
+                    <li>Flutter & Dart</li>
+                    <li>Cross-platform Development</li>
+                    <li>Mobile UI/UX</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-700 mb-2">DevOps & Tools</h4>
+                  <ul className="list-disc list-inside space-y-1 text-sm">
+                    <li>Git & GitHub</li>
+                    <li>GitHub Actions (CI/CD)</li>
+                    <li>Vercel & Cloud Deployment</li>
+                    <li>Agile & Scrum</li>
+                  </ul>
+                </div>
+              </div>
             </section>
 
             <section id="portfolio" className="mb-16" data-aos="fade-up">
@@ -216,6 +252,30 @@ export default function Home() {
                 id="portfolio-items"
               >
                 <PortfolioCard
+                  title="Gitsawe Web App"
+                  description="Full-stack Ethiopian Orthodox Church platform with React, Node.js, Express, and MongoDB. Features news system, book library, and calendar."
+                  url="https://github.com/hailemariam-eyayu/GitsaweTailwind"
+                  category="web"
+                />
+                <PortfolioCard
+                  title="Gitsawe Expo App"
+                  description="React Native mobile app with Expo featuring Bahire Hasab calculator, Mahlet prayer book, Bible reader, and Ethiopian calendar support."
+                  url="https://github.com/hailemariam-eyayu/gitsawe_expo_app"
+                  category="mobile"
+                />
+                <PortfolioCard
+                  title="Gitsawe Flutter App"
+                  description="Native Flutter mobile app for Ethiopian Orthodox Church content with multi-platform support (Android, iOS, Web, Desktop)."
+                  url="https://github.com/hailemariam-eyayu/gitsaweflutterapk"
+                  category="mobile"
+                />
+                <PortfolioCard
+                  title="Gitsawe React Native App"
+                  description="Bare React Native mobile app with full native control and TypeScript support for Ethiopian Orthodox Church services."
+                  url="https://github.com/hailemariam-eyayu/GitsaweReactNative"
+                  category="mobile"
+                />
+                <PortfolioCard
                   title="Dormitory Management System (DMU_DMS)"
                   description="A comprehensive Laravel + PHP system for managing university dormitories."
                   url="https://github.com/EdenMelkie/dmudms"
@@ -224,26 +284,8 @@ export default function Home() {
                 <PortfolioCard
                   title="Personal Portfolio Website"
                   description="Responsive website built with Next.js showcasing my skills and projects."
-                  url="https://github.com/EdenMelkie/portfolio"
+                  url="https://github.com/hailemariam-eyayu/portfolio"
                   category="web"
-                />
-                <PortfolioCard
-                  title="My Laravel Portfolio"
-                  description="Personal Laravel-based portfolio highlighting back-end and UI experience."
-                  url="https://github.com/EdenMelkie/personal-portfolio"
-                  category="web"
-                />
-                <PortfolioCard
-                  title="Gitsawe APK"
-                  description="Spiritual mobile app built with Flutter and Dart, featuring daily religious readings."
-                  url="https://github.com/EdenMelkie/gitsawe"
-                  category="mobile"
-                />
-                <PortfolioCard
-                  title="Calendar APK"
-                  description="Android app in Java for religious and calendar-based content."
-                  url="https://github.com/EdenMelkie/Calander"
-                  category="mobile"
                 />
               </div>
             </section>
