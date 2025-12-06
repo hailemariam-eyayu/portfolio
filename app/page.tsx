@@ -25,7 +25,7 @@ const PortfolioCard = ({ title, description, url, category }) => (
   </div>
 );
 
-const Header = ({ toggleSidebar, toggleDarkMode, isDarkMode }) => {
+const Header = ({ toggleSidebar, toggleDarkMode, isDarkMode, fontSize, changeFontSize }) => {
   return (
     <nav
       className={`navbar navbar-expand-lg fixed-top shadow-sm z-50 ${
@@ -49,7 +49,7 @@ const Header = ({ toggleSidebar, toggleDarkMode, isDarkMode }) => {
               (id) => (
                 <li key={id} className="nav-item">
                   <a
-                    className="nav-link px-3 py-2 rounded text-white"
+                    className="nav-link px-3 py-2 rounded text-white hover:bg-white hover:bg-opacity-20 transition"
                     href={`#${id}`}
                     onClick={(e) => {
                       e.preventDefault();
@@ -63,13 +63,55 @@ const Header = ({ toggleSidebar, toggleDarkMode, isDarkMode }) => {
                 </li>
               )
             )}
+            
+            {/* Font Size Control */}
+            <li className="nav-item dropdown">
+              <button
+                className="btn btn-outline-light dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                title="Font Size"
+              >
+                <i className="fas fa-text-height"></i>
+              </button>
+              <ul className="dropdown-menu dropdown-menu-end">
+                <li>
+                  <button
+                    className={`dropdown-item ${fontSize === "small" ? "active" : ""}`}
+                    onClick={() => changeFontSize("small")}
+                  >
+                    Small
+                  </button>
+                </li>
+                <li>
+                  <button
+                    className={`dropdown-item ${fontSize === "medium" ? "active" : ""}`}
+                    onClick={() => changeFontSize("medium")}
+                  >
+                    Medium
+                  </button>
+                </li>
+                <li>
+                  <button
+                    className={`dropdown-item ${fontSize === "large" ? "active" : ""}`}
+                    onClick={() => changeFontSize("large")}
+                  >
+                    Large
+                  </button>
+                </li>
+              </ul>
+            </li>
+
+            {/* Dark Mode Toggle */}
             <li className="nav-item">
               <button
                 onClick={toggleDarkMode}
                 className={`rounded-circle p-2 border ${
-                  isDarkMode ? "btn btn-outline-light" : "btn btn-outline-dark"
+                  isDarkMode ? "btn btn-outline-light" : "btn btn-outline-light"
                 }`}
                 style={{ width: "38px", height: "38px" }}
+                title={isDarkMode ? "Light Mode" : "Dark Mode"}
               >
                 {isDarkMode ? (
                   <svg
@@ -112,9 +154,27 @@ export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [fontSize, setFontSize] = useState("medium");
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
-  const toggleDarkMode = () => setIsDarkMode((prev) => !prev);
+  const toggleDarkMode = () => {
+    setIsDarkMode((prev) => !prev);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("darkMode", (!isDarkMode).toString());
+    }
+  };
+
+  const changeFontSize = (size: string) => {
+    setFontSize(size);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("fontSize", size);
+    }
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -122,13 +182,30 @@ export default function Home() {
     import("aos").then((AOS) => {
       AOS.init({ once: true, duration: 800 });
     });
+
+    // Load saved preferences
+    if (typeof window !== "undefined") {
+      const savedDarkMode = localStorage.getItem("darkMode") === "true";
+      const savedFontSize = localStorage.getItem("fontSize") || "medium";
+      setIsDarkMode(savedDarkMode);
+      setFontSize(savedFontSize);
+    }
+
+    // Scroll to top button visibility
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
     if (mounted) {
       document.body.classList.toggle("dark-mode", isDarkMode);
+      document.documentElement.style.fontSize =
+        fontSize === "small" ? "14px" : fontSize === "large" ? "18px" : "16px";
     }
-  }, [isDarkMode, mounted]);
+  }, [isDarkMode, fontSize, mounted]);
 
   return (
     <>
@@ -136,6 +213,8 @@ export default function Home() {
         toggleSidebar={toggleSidebar}
         toggleDarkMode={toggleDarkMode}
         isDarkMode={isDarkMode}
+        fontSize={fontSize}
+        changeFontSize={changeFontSize}
       />
 
       <div className="d-flex mt-5 pt-5">
@@ -536,6 +615,30 @@ export default function Home() {
           </div>
         </main>
       </div>
+
+      {/* Scroll to Top Button */}
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg transition-all duration-300 z-50 hover:scale-110"
+          aria-label="Scroll to top"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M4.5 15.75l7.5-7.5 7.5 7.5"
+            />
+          </svg>
+        </button>
+      )}
     </>
   );
 }
