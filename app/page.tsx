@@ -2,12 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Sidebar from "./components/sidebar";
-
-// Dynamically import AOS to avoid SSR issues
-const AOS = typeof window !== "undefined" ? require("aos") : null;
-if (typeof window !== "undefined") {
-  require("aos/dist/aos.css");
-}
+import "aos/dist/aos.css";
 
 const PortfolioCard = ({ title, description, url, category }) => (
   <div className={`portfolio-item`} data-category={category}>
@@ -123,9 +118,10 @@ export default function Home() {
 
   useEffect(() => {
     setMounted(true);
-    if (AOS) {
+    // Import AOS dynamically only on client side
+    import("aos").then((AOS) => {
       AOS.init({ once: true, duration: 800 });
-    }
+    });
   }, []);
 
   useEffect(() => {
