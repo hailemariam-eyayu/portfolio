@@ -1,10 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Head from "next/head";
+import dynamic from "next/dynamic";
 import Sidebar from "./components/sidebar";
-import AOS from "aos";
-import "aos/dist/aos.css";
+
+// Dynamically import AOS to avoid SSR issues
+const AOS = typeof window !== 'undefined' ? require("aos") : null;
+if (typeof window !== 'undefined') {
+  require("aos/dist/aos.css");
+}
 
 const PortfolioCard = ({ title, description, url, category }) => (
   <div className={`portfolio-item`} data-category={category}>
@@ -120,7 +124,9 @@ export default function Home() {
 
   useEffect(() => {
     setMounted(true);
-    AOS.init({ once: true, duration: 800 });
+    if (AOS) {
+      AOS.init({ once: true, duration: 800 });
+    }
   }, []);
 
   useEffect(() => {
