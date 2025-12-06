@@ -3,27 +3,6 @@
 import React, { useState, useEffect } from "react";
 import "aos/dist/aos.css";
 
-const PortfolioCard = ({ title, description, url, category }) => (
-  <div className={`portfolio-item`} data-category={category}>
-    <div className="bg-white shadow-lg rounded-xl overflow-hidden flex flex-col h-full border border-gray-200 hover:shadow-2xl transition-shadow duration-300">
-      <div className="p-6 flex-grow">
-        <h3 className="text-2xl font-semibold text-gray-800 mb-3">{title}</h3>
-        <p className="text-gray-600">{description}</p>
-      </div>
-      <div className="bg-gray-100 px-6 py-4">
-        <a
-          href={url}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-block text-center w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300"
-        >
-          View Project
-        </a>
-      </div>
-    </div>
-  </div>
-);
-
 const Header = ({ toggleDarkMode, isDarkMode, fontSize, changeFontSize, mobileMenuOpen, setMobileMenuOpen }) => {
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -181,12 +160,115 @@ const Header = ({ toggleDarkMode, isDarkMode, fontSize, changeFontSize, mobileMe
   );
 };
 
+interface Project {
+  id: number;
+  title: string;
+  description: string;
+  url: string;
+  category: string;
+  image?: string;
+  technologies?: string[];
+}
+
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [fontSize, setFontSize] = useState("medium");
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [activeFilter, setActiveFilter] = useState("all");
+  const [showAddProjectForm, setShowAddProjectForm] = useState(false);
+  const [projects, setProjects] = useState<Project[]>([
+    {
+      id: 1,
+      title: "Gitsawe Web App",
+      description: "Full-stack Ethiopian Orthodox Church platform with React, Node.js, Express, and MongoDB. Features news system, book library, and calendar.",
+      url: "https://github.com/hailemariam-eyayu/GitsaweTailwind",
+      category: "web",
+      technologies: ["React", "Node.js", "MongoDB", "Express"],
+    },
+    {
+      id: 2,
+      title: "Gitsawe Expo App",
+      description: "React Native mobile app with Expo featuring Bahire Hasab calculator, Mahlet prayer book, Bible reader, and Ethiopian calendar support.",
+      url: "https://github.com/hailemariam-eyayu/gitsawe_expo_app",
+      category: "mobile",
+      technologies: ["React Native", "Expo", "TypeScript"],
+    },
+    {
+      id: 3,
+      title: "Gitsawe Flutter App",
+      description: "Native Flutter mobile app for Ethiopian Orthodox Church content with multi-platform support (Android, iOS, Web, Desktop).",
+      url: "https://github.com/hailemariam-eyayu/gitsaweflutterapk",
+      category: "mobile",
+      technologies: ["Flutter", "Dart"],
+    },
+    {
+      id: 4,
+      title: "Gitsawe React Native App",
+      description: "Bare React Native mobile app with full native control and TypeScript support for Ethiopian Orthodox Church services.",
+      url: "https://github.com/hailemariam-eyayu/GitsaweReactNative",
+      category: "mobile",
+      technologies: ["React Native", "TypeScript"],
+    },
+    {
+      id: 5,
+      title: "Dormitory Management System",
+      description: "A comprehensive Laravel + PHP system for managing university dormitories.",
+      url: "https://github.com/EdenMelkie/dmudms",
+      category: "web",
+      technologies: ["Laravel", "PHP", "MySQL"],
+    },
+    {
+      id: 6,
+      title: "Personal Portfolio",
+      description: "Responsive website built with Next.js showcasing my skills and projects.",
+      url: "https://github.com/hailemariam-eyayu/portfolio",
+      category: "web",
+      technologies: ["Next.js", "React", "Tailwind CSS"],
+    },
+  ]);
+  const [newProject, setNewProject] = useState({
+    title: "",
+    description: "",
+    url: "",
+    category: "web",
+    technologies: "",
+  });
+
+  const filteredProjects = activeFilter === "all" 
+    ? projects 
+    : projects.filter(p => p.category === activeFilter);
+
+  const handleAddProject = (e: React.FormEvent) => {
+    e.preventDefault();
+    const project: Project = {
+      id: projects.length + 1,
+      title: newProject.title,
+      description: newProject.description,
+      url: newProject.url,
+      category: newProject.category,
+      technologies: newProject.technologies.split(",").map(t => t.trim()),
+    };
+    setProjects([...projects, project]);
+    setNewProject({ title: "", description: "", url: "", category: "web", technologies: "" });
+    setShowAddProjectForm(false);
+    
+    // Save to localStorage
+    if (typeof window !== "undefined") {
+      localStorage.setItem("portfolioProjects", JSON.stringify([...projects, project]));
+    }
+  };
+
+  useEffect(() => {
+    // Load projects from localStorage
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("portfolioProjects");
+      if (saved) {
+        setProjects(JSON.parse(saved));
+      }
+    }
+  }, []);
   const toggleDarkMode = () => {
     setIsDarkMode((prev) => !prev);
     if (typeof window !== "undefined") {
@@ -539,61 +621,176 @@ export default function Home() {
               </div>
             </section>
 
-            <section id="portfolio" className="mb-16" data-aos="fade-up">
-              <h2 className="text-4xl font-bold text-center mb-10 text-gray-800">
-                My Portfolio
-              </h2>
-              <div className="flex justify-center flex-wrap gap-4 mb-8">
-                {["All", "Web", "Mobile"].map((type) => (
-                  <button
-                    key={type}
-                    className="px-5 py-2 rounded-full border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300 filter-btn"
-                    data-filter={type.toLowerCase()}
-                  >
-                    {type}
-                  </button>
-                ))}
-              </div>
-              <div
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
-                id="portfolio-items"
-              >
-                <PortfolioCard
-                  title="Gitsawe Web App"
-                  description="Full-stack Ethiopian Orthodox Church platform with React, Node.js, Express, and MongoDB. Features news system, book library, and calendar."
-                  url="https://github.com/hailemariam-eyayu/GitsaweTailwind"
-                  category="web"
-                />
-                <PortfolioCard
-                  title="Gitsawe Expo App"
-                  description="React Native mobile app with Expo featuring Bahire Hasab calculator, Mahlet prayer book, Bible reader, and Ethiopian calendar support."
-                  url="https://github.com/hailemariam-eyayu/gitsawe_expo_app"
-                  category="mobile"
-                />
-                <PortfolioCard
-                  title="Gitsawe Flutter App"
-                  description="Native Flutter mobile app for Ethiopian Orthodox Church content with multi-platform support (Android, iOS, Web, Desktop)."
-                  url="https://github.com/hailemariam-eyayu/gitsaweflutterapk"
-                  category="mobile"
-                />
-                <PortfolioCard
-                  title="Gitsawe React Native App"
-                  description="Bare React Native mobile app with full native control and TypeScript support for Ethiopian Orthodox Church services."
-                  url="https://github.com/hailemariam-eyayu/GitsaweReactNative"
-                  category="mobile"
-                />
-                <PortfolioCard
-                  title="Dormitory Management System (DMU_DMS)"
-                  description="A comprehensive Laravel + PHP system for managing university dormitories."
-                  url="https://github.com/EdenMelkie/dmudms"
-                  category="web"
-                />
-                <PortfolioCard
-                  title="Personal Portfolio Website"
-                  description="Responsive website built with Next.js showcasing my skills and projects."
-                  url="https://github.com/hailemariam-eyayu/portfolio"
-                  category="web"
-                />
+            {/* Portfolio Section */}
+            <section id="portfolio" className="py-20 bg-gray-50">
+              <div className="container mx-auto px-4">
+                <div className="max-w-7xl mx-auto" data-aos="fade-up">
+                  <div className="text-center mb-12">
+                    <h2 className="text-4xl md:text-5xl font-bold mb-4">
+                      My <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Portfolio</span>
+                    </h2>
+                    <div className="w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 mx-auto rounded-full mb-8"></div>
+                    <p className="text-gray-600 max-w-2xl mx-auto">
+                      Explore my latest projects showcasing expertise in web and mobile development
+                    </p>
+                  </div>
+
+                  {/* Filter Buttons */}
+                  <div className="flex justify-center flex-wrap gap-3 mb-12">
+                    {[
+                      { label: "All Projects", value: "all", icon: "fa-th" },
+                      { label: "Web Apps", value: "web", icon: "fa-globe" },
+                      { label: "Mobile Apps", value: "mobile", icon: "fa-mobile-alt" },
+                    ].map((filter) => (
+                      <button
+                        key={filter.value}
+                        onClick={() => setActiveFilter(filter.value)}
+                        className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 ${
+                          activeFilter === filter.value
+                            ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg scale-105"
+                            : "bg-white text-gray-700 hover:shadow-md hover:scale-105"
+                        }`}
+                      >
+                        <i className={`fas ${filter.icon}`}></i>
+                        {filter.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Add Project Button */}
+                  <div className="flex justify-center mb-8">
+                    <button
+                      onClick={() => setShowAddProjectForm(!showAddProjectForm)}
+                      className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-full font-semibold hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center gap-2"
+                    >
+                      <i className="fas fa-plus"></i>
+                      {showAddProjectForm ? "Cancel" : "Add New Project"}
+                    </button>
+                  </div>
+
+                  {/* Add Project Form */}
+                  {showAddProjectForm && (
+                    <div className="bg-white rounded-2xl shadow-xl p-8 mb-12 max-w-2xl mx-auto" data-aos="fade-down">
+                      <h3 className="text-2xl font-bold mb-6 text-gray-800">Add New Project</h3>
+                      <form onSubmit={handleAddProject} className="space-y-4">
+                        <div>
+                          <label className="block text-gray-700 font-semibold mb-2">Project Title</label>
+                          <input
+                            type="text"
+                            required
+                            value={newProject.title}
+                            onChange={(e) => setNewProject({ ...newProject, title: e.target.value })}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="Enter project title"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-gray-700 font-semibold mb-2">Description</label>
+                          <textarea
+                            required
+                            value={newProject.description}
+                            onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            rows={4}
+                            placeholder="Describe your project"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-gray-700 font-semibold mb-2">Project URL</label>
+                          <input
+                            type="url"
+                            required
+                            value={newProject.url}
+                            onChange={(e) => setNewProject({ ...newProject, url: e.target.value })}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="https://github.com/..."
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-gray-700 font-semibold mb-2">Category</label>
+                          <select
+                            value={newProject.category}
+                            onChange={(e) => setNewProject({ ...newProject, category: e.target.value })}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          >
+                            <option value="web">Web App</option>
+                            <option value="mobile">Mobile App</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-gray-700 font-semibold mb-2">Technologies (comma-separated)</label>
+                          <input
+                            type="text"
+                            value={newProject.technologies}
+                            onChange={(e) => setNewProject({ ...newProject, technologies: e.target.value })}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="React, Node.js, MongoDB"
+                          />
+                        </div>
+                        <button
+                          type="submit"
+                          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-semibold hover:shadow-xl transition-all duration-300"
+                        >
+                          Add Project
+                        </button>
+                      </form>
+                    </div>
+                  )}
+
+                  {/* Projects Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {filteredProjects.map((project) => (
+                      <div
+                        key={project.id}
+                        className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
+                        data-aos="fade-up"
+                      >
+                        <div className="p-6">
+                          <div className="flex items-center justify-between mb-4">
+                            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                              project.category === "web"
+                                ? "bg-blue-100 text-blue-600"
+                                : "bg-purple-100 text-purple-600"
+                            }`}>
+                              {project.category === "web" ? "Web App" : "Mobile App"}
+                            </span>
+                            <i className={`fas ${project.category === "web" ? "fa-globe" : "fa-mobile-alt"} text-2xl text-gray-400`}></i>
+                          </div>
+                          <h3 className="text-xl font-bold text-gray-800 mb-3">{project.title}</h3>
+                          <p className="text-gray-600 mb-4 line-clamp-3">{project.description}</p>
+                          {project.technologies && (
+                            <div className="flex flex-wrap gap-2 mb-4">
+                              {project.technologies.map((tech, idx) => (
+                                <span
+                                  key={idx}
+                                  className="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs"
+                                >
+                                  {tech}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                          <a
+                            href={project.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 text-blue-600 font-semibold hover:gap-3 transition-all duration-300"
+                          >
+                            View Project
+                            <i className="fas fa-arrow-right"></i>
+                          </a>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {filteredProjects.length === 0 && (
+                    <div className="text-center py-12">
+                      <i className="fas fa-folder-open text-6xl text-gray-300 mb-4"></i>
+                      <p className="text-gray-500 text-lg">No projects found in this category</p>
+                    </div>
+                  )}
+                </div>
               </div>
             </section>
 
