@@ -1,12 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import dynamic from "next/dynamic";
 import Sidebar from "./components/sidebar";
 
 // Dynamically import AOS to avoid SSR issues
-const AOS = typeof window !== 'undefined' ? require("aos") : null;
-if (typeof window !== 'undefined') {
+const AOS = typeof window !== "undefined" ? require("aos") : null;
+if (typeof window !== "undefined") {
   require("aos/dist/aos.css");
 }
 
@@ -137,16 +136,6 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        <title>Hailemariam Eyayu - Full-Stack & Mobile Developer</title>
-        <meta
-          name="description"
-          content="Portfolio of Hailemariam Eyayu, experienced Full-Stack and Mobile Developer."
-        />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
       <Header
         toggleSidebar={toggleSidebar}
         toggleDarkMode={toggleDarkMode}
