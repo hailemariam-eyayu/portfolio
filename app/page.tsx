@@ -248,57 +248,191 @@ export default function Home() {
       />
 
       <main className="pt-20">
-          <div className="min-h-screen flex flex-col items-center bg-gray-50 text-gray-900 font-sans px-4">
-            <header className="flex flex-col items-center mb-8 text-center">
-              <img
-                src="/images/HME.png"
-                alt="Hailemariam Eyayu"
-                className="w-36 h-36 rounded-full object-cover shadow-md mb-4"
-                loading="lazy"
-              />
-              <h1 className="text-3xl font-bold">Hailemariam Eyayu</h1>
-              <p className="text-lg text-gray-600 font-medium">
-                Full-Stack & Mobile Developer
-              </p>
-            </header>
-
-            <section
-              id="about"
-              className="bg-white p-6 rounded-lg shadow w-full max-w-3xl mb-10"
-            >
-              <h3 className="text-2xl font-semibold text-blue-600 border-b-2 border-blue-500 pb-1 mb-4">
-                About Me
-              </h3>
-              <p className="mb-3">
-                With over 3 years of experience, I have developed a deep
-                understanding of modern technologies including Flutter, Laravel,
-                React, Node.js, and PHP. I am a strong advocate of clean code,
-                user-centered design, and continuous learning.
-              </p>
-              <p>
-                Recently, I developed Gitsawe - a comprehensive multi-platform Ethiopian Orthodox Church application 
-                featuring a full-stack web app (React, Node.js, MongoDB) and three mobile implementations 
-                (Expo, Flutter, React Native). The project showcases my expertise in building scalable, 
-                cross-platform solutions with modern CI/CD practices.
-              </p>
+          <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
+            {/* Hero Section */}
+            <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 py-20 md:py-32">
+              <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+              <div className="container mx-auto px-4 relative z-10">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-12">
+                  {/* Profile Image */}
+                  <div className="relative" data-aos="fade-right">
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur-2xl opacity-30 animate-pulse"></div>
+                    <img
+                      src="/images/HME.png"
+                      alt="Hailemariam Eyayu"
+                      className="relative w-64 h-64 md:w-80 md:h-80 rounded-full object-cover shadow-2xl border-8 border-white"
+                      loading="lazy"
+                    />
+                  </div>
+                  
+                  {/* Hero Content */}
+                  <div className="flex-1 text-center md:text-left" data-aos="fade-left">
+                    <div className="inline-block mb-4">
+                      <span className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full text-sm font-semibold">
+                        Available for Opportunities
+                      </span>
+                    </div>
+                    <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                      Hailemariam Eyayu
+                    </h1>
+                    <p className="text-2xl md:text-3xl text-gray-700 font-semibold mb-6">
+                      Full-Stack & Mobile Developer
+                    </p>
+                    <p className="text-lg text-gray-600 mb-8 max-w-2xl">
+                      Crafting exceptional digital experiences with modern technologies. 
+                      Specialized in React, Node.js, Flutter, and React Native.
+                    </p>
+                    
+                    {/* CTA Buttons */}
+                    <div className="flex flex-wrap gap-4 justify-center md:justify-start">
+                      <a
+                        href="#portfolio"
+                        className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full font-semibold hover:shadow-xl hover:scale-105 transition-all duration-300"
+                      >
+                        View My Work
+                      </a>
+                      <a
+                        href="#contact"
+                        className="bg-white text-gray-800 px-8 py-4 rounded-full font-semibold border-2 border-gray-300 hover:border-blue-600 hover:shadow-xl hover:scale-105 transition-all duration-300"
+                      >
+                        Get In Touch
+                      </a>
+                    </div>
+                    
+                    {/* Social Links */}
+                    <div className="flex gap-4 mt-8 justify-center md:justify-start">
+                      <a
+                        href="https://github.com/hailemariam-eyayu"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300"
+                        title="GitHub"
+                      >
+                        <i className="fab fa-github text-gray-800 text-xl"></i>
+                      </a>
+                      <a
+                        href="https://t.me/HaileEden"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300"
+                        title="Telegram"
+                      >
+                        <i className="fab fa-telegram text-blue-500 text-xl"></i>
+                      </a>
+                      <a
+                        href="mailto:hailemariameyayu2012@gmail.com"
+                        className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300"
+                        title="Email"
+                      >
+                        <i className="fas fa-envelope text-red-500 text-xl"></i>
+                      </a>
+                      <a
+                        href="tel:+251938169557"
+                        className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300"
+                        title="Phone"
+                      >
+                        <i className="fas fa-phone text-green-500 text-xl"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </section>
 
-            <section
-              id="skills"
-              className="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl mb-10"
-              data-aos="fade-up"
-            >
-              <h3 className="text-3xl font-bold text-blue-600 border-b-2 border-blue-500 pb-2 mb-6">
-                Skills & Expertise
-              </h3>
+            {/* Stats Section */}
+            <section className="py-12 bg-white shadow-sm" data-aos="fade-up">
+              <div className="container mx-auto px-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                  <div className="text-center">
+                    <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                      3+
+                    </div>
+                    <div className="text-gray-600 font-medium">Years Experience</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+                      15+
+                    </div>
+                    <div className="text-gray-600 font-medium">Technologies</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-pink-600 to-red-600 bg-clip-text text-transparent mb-2">
+                      6+
+                    </div>
+                    <div className="text-gray-600 font-medium">Projects</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent mb-2">
+                      4
+                    </div>
+                    <div className="text-gray-600 font-medium">Platforms</div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* About Section */}
+            <section id="about" className="py-20 bg-gray-50">
+              <div className="container mx-auto px-4">
+                <div className="max-w-4xl mx-auto" data-aos="fade-up">
+                  <div className="text-center mb-12">
+                    <h2 className="text-4xl md:text-5xl font-bold mb-4">
+                      About <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Me</span>
+                    </h2>
+                    <div className="w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 mx-auto rounded-full"></div>
+                  </div>
+                  
+                  <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full -mr-32 -mt-32 opacity-50"></div>
+                    <div className="relative z-10">
+                      <p className="text-lg text-gray-700 leading-relaxed mb-6">
+                        With over <span className="font-bold text-blue-600">3 years of experience</span>, I have developed a deep
+                        understanding of modern technologies including <span className="font-semibold">Flutter, Laravel,
+                        React, Node.js, and PHP</span>. I am a strong advocate of clean code,
+                        user-centered design, and continuous learning.
+                      </p>
+                      <p className="text-lg text-gray-700 leading-relaxed">
+                        Recently, I developed <span className="font-bold text-purple-600">Gitsawe</span> - a comprehensive multi-platform Ethiopian Orthodox Church application 
+                        featuring a full-stack web app (React, Node.js, MongoDB) and three mobile implementations 
+                        (Expo, Flutter, React Native). The project showcases my expertise in building scalable, 
+                        cross-platform solutions with modern CI/CD practices.
+                      </p>
+                      
+                      <div className="mt-8 flex flex-wrap gap-3">
+                        {["Problem Solving", "Team Collaboration", "Agile Development", "Clean Code"].map((skill) => (
+                          <span
+                            key={skill}
+                            className="px-4 py-2 bg-gradient-to-r from-blue-50 to-purple-50 text-gray-700 rounded-full text-sm font-medium border border-blue-200"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Skills Section */}
+            <section id="skills" className="py-20 bg-white">
+              <div className="container mx-auto px-4">
+                <div className="max-w-6xl mx-auto" data-aos="fade-up">
+                  <div className="text-center mb-12">
+                    <h2 className="text-4xl md:text-5xl font-bold mb-4">
+                      Skills & <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Expertise</span>
+                    </h2>
+                    <div className="w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 mx-auto rounded-full"></div>
+                  </div>
               
-              {/* Languages & Frameworks */}
-              <div className="mb-8">
-                <h4 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                  <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm mr-3">
-                    Languages & Frameworks
-                  </span>
-                </h4>
+                  {/* Languages & Frameworks */}
+                  <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-8 mb-8 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <h4 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                      <span className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center mr-3">
+                        <i className="fas fa-code text-white"></i>
+                      </span>
+                      Languages & Frameworks
+                    </h4>
                 <div className="space-y-4">
                   {[
                     { name: "JavaScript / TypeScript", level: 90, color: "bg-yellow-500" },
