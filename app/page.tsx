@@ -619,6 +619,8 @@ export default function Home() {
                   <div className="text-sm text-gray-600 mt-1">Platforms</div>
                 </div>
               </div>
+                </div>
+              </div>
             </section>
 
             {/* Portfolio Section */}
