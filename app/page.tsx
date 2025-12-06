@@ -113,14 +113,21 @@ const Header = ({ toggleSidebar, toggleDarkMode, isDarkMode }) => {
 export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
   const toggleDarkMode = () => setIsDarkMode((prev) => !prev);
 
   useEffect(() => {
-    document.body.classList.toggle("dark-mode", isDarkMode);
+    setMounted(true);
     AOS.init({ once: true, duration: 800 });
-  }, [isDarkMode]);
+  }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      document.body.classList.toggle("dark-mode", isDarkMode);
+    }
+  }, [isDarkMode, mounted]);
 
   return (
     <>
