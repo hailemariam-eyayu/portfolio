@@ -3,7 +3,21 @@
 import React, { useState, useEffect } from "react";
 import "aos/dist/aos.css";
 
-const Header = ({ toggleDarkMode, isDarkMode, fontSize, changeFontSize, mobileMenuOpen, setMobileMenuOpen }) => {
+const Header = ({ 
+  toggleDarkMode, 
+  isDarkMode, 
+  fontSize, 
+  changeFontSize, 
+  mobileMenuOpen, 
+  setMobileMenuOpen 
+}: {
+  toggleDarkMode: () => void;
+  isDarkMode: boolean;
+  fontSize: string;
+  changeFontSize: (size: string) => void;
+  mobileMenuOpen: boolean;
+  setMobileMenuOpen: (open: boolean) => void;
+}) => {
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       isDarkMode 
