@@ -290,14 +290,20 @@ const EditProjectModal = ({ project, onSave, onCancel }: EditModalProps) => {
   );
 };
 
-const PasswordModal = ({ onSuccess, onCancel }: { onSuccess: () => void; onCancel: () => void }) => {
+const PasswordModal = ({ onSuccess, onCancel, action = "edit" }: { 
+  onSuccess: () => void; 
+  onCancel: () => void; 
+  action?: "edit" | "delete" | "add";
+}) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simple password check - in production, use proper authentication
-    if (password === 'admin123') {
+    // Get password from environment variable
+    const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123';
+    
+    if (password === adminPassword) {
       onSuccess();
     } else {
       setError('Incorrect password. Please try again.');
@@ -305,10 +311,27 @@ const PasswordModal = ({ onSuccess, onCancel }: { onSuccess: () => void; onCance
     }
   };
 
+  const getActionText = () => {
+    switch (action) {
+      case "delete":
+        return "Delete Project";
+      case "add":
+        return "Add Project";
+      case "edit":
+      default:
+        return "Edit Project";
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
-        <h3 className="text-2xl font-bold mb-6 text-gray-800 text-center">Enter Admin Password</h3>
+        <h3 className="text-2xl font-bold mb-6 text-gray-800 text-center">
+          Admin Authentication Required
+        </h3>
+        <p className="text-gray-600 text-center mb-6">
+          Enter admin password to {getActionText().toLowerCase()}
+        </p>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-gray-700 font-semibold mb-2">Password</label>
@@ -352,8 +375,11 @@ export default function Home() {
   const [activeFilter, setActiveFilter] = useState("all");
   const [showAddProjectForm, setShowAddProjectForm] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showDeletePasswordModal, setShowDeletePasswordModal] = useState(false);
+  const [showAddPasswordModal, setShowAddPasswordModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [deletingProjectId, setDeletingProjectId] = useState<number | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [projects, setProjects] = useState<Project[]>([
     {
@@ -467,6 +493,43 @@ export default function Home() {
     }
   };
 
+  const handleDeletePasswordSuccess = () => {
+    setIsAuthenticated(true);
+    setShowDeletePasswordModal(false);
+    
+    if (deletingProjectId !== null) {
+      if (confirm('Are you sure you want to delete this project? This action cannot be undone.')) {
+        const updatedProjects = projects.filter(p => p.id !== deletingProjectId);
+        setProjects(updatedProjects);
+        
+        // Save to localStorage
+        if (typeof window !== "undefined") {
+          localStorage.setItem("portfolioProjects", JSON.stringify(updatedProjects));
+        }
+      }
+      setDeletingProjectId(null);
+    }
+  };
+
+  const handleAddProjectClick = () => {
+    if (showAddProjectForm) {
+      // If form is already open, just close it
+      setShowAddProjectForm(false);
+    } else if (isAuthenticated) {
+      // If authenticated, show form directly
+      setShowAddProjectForm(true);
+    } else {
+      // If not authenticated, show password modal
+      setShowAddPasswordModal(true);
+    }
+  };
+
+  const handleAddPasswordSuccess = () => {
+    setIsAuthenticated(true);
+    setShowAddPasswordModal(false);
+    setShowAddProjectForm(true);
+  };
+
   const handleSaveProject = (updatedProject: Project) => {
     const updatedProjects = projects.map(p => 
       p.id === updatedProject.id ? updatedProject : p
@@ -482,14 +545,21 @@ export default function Home() {
   };
 
   const handleDeleteProject = (projectId: number) => {
-    if (isAuthenticated && confirm('Are you sure you want to delete this project?')) {
-      const updatedProjects = projects.filter(p => p.id !== projectId);
-      setProjects(updatedProjects);
-      
-      // Save to localStorage
-      if (typeof window !== "undefined") {
-        localStorage.setItem("portfolioProjects", JSON.stringify(updatedProjects));
+    if (isAuthenticated) {
+      // If already authenticated, show confirmation dialog
+      if (confirm('Are you sure you want to delete this project? This action cannot be undone.')) {
+        const updatedProjects = projects.filter(p => p.id !== projectId);
+        setProjects(updatedProjects);
+        
+        // Save to localStorage
+        if (typeof window !== "undefined") {
+          localStorage.setItem("portfolioProjects", JSON.stringify(updatedProjects));
+        }
       }
+    } else {
+      // If not authenticated, show password modal
+      setDeletingProjectId(projectId);
+      setShowDeletePasswordModal(true);
     }
   };
 
@@ -896,7 +966,7 @@ export default function Home() {
                   {/* Add Project Button */}
                   <div className="flex justify-center mb-8">
                     <button
-                      onClick={() => setShowAddProjectForm(!showAddProjectForm)}
+                      onClick={handleAddProjectClick}
                       className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-full font-semibold hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center gap-2"
                     >
                       <i className="fas fa-plus"></i>
@@ -1276,10 +1346,34 @@ export default function Home() {
       {/* Password Modal */}
       {showPasswordModal && (
         <PasswordModal
+          action="edit"
           onSuccess={handlePasswordSuccess}
           onCancel={() => {
             setShowPasswordModal(false);
             setEditingProject(null);
+          }}
+        />
+      )}
+
+      {/* Delete Password Modal */}
+      {showDeletePasswordModal && (
+        <PasswordModal
+          action="delete"
+          onSuccess={handleDeletePasswordSuccess}
+          onCancel={() => {
+            setShowDeletePasswordModal(false);
+            setDeletingProjectId(null);
+          }}
+        />
+      )}
+
+      {/* Add Password Modal */}
+      {showAddPasswordModal && (
+        <PasswordModal
+          action="add"
+          onSuccess={handleAddPasswordSuccess}
+          onCancel={() => {
+            setShowAddPasswordModal(false);
           }}
         />
       )}
