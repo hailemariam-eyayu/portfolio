@@ -179,6 +179,7 @@ interface Project {
   title: string;
   description: string;
   url: string;
+  liveUrl?: string;
   category: string;
   image?: string;
   technologies?: string[];
@@ -198,6 +199,7 @@ export default function Home() {
       title: "Gitsawe Web App",
       description: "Full-stack Ethiopian Orthodox Church platform with React, Node.js, Express, and MongoDB. Features news system, book library, calendar, and automatic Telegram bot broadcasts.",
       url: "https://github.com/hailemariam-eyayu/GitsaweTailwind",
+      liveUrl: "https://gitsawe-tailwind-2019.vercel.app/",
       category: "web",
       technologies: ["React", "Node.js", "MongoDB", "Express", "Tailwind CSS"],
     },
@@ -206,6 +208,7 @@ export default function Home() {
       title: "Ethiopian Orthodox Telegram Bots",
       description: "Three automated Telegram bots for daily Ethiopian Orthodox readings (Gitsawe & Sinksar) with MongoDB integration, cron scheduling, and beautiful message formatting.",
       url: "https://github.com/hailemariam-eyayu/gitsawebot",
+      liveUrl: "https://t.me/gitsawebot",
       category: "bot",
       technologies: ["Node.js", "MongoDB", "Telegram API", "Cron Jobs"],
     },
@@ -222,6 +225,7 @@ export default function Home() {
       title: "CV Builder Application",
       description: "Professional resume builder with multiple templates, real-time preview, PDF export, and responsive design for creating stunning CVs.",
       url: "https://github.com/hailemariam-eyayu/cv-builder",
+      liveUrl: "https://cv-builder-hailemariam.vercel.app/",
       category: "web",
       technologies: ["React", "TypeScript", "Tailwind CSS", "PDF.js"],
     },
@@ -230,6 +234,7 @@ export default function Home() {
       title: "Gitsawe Flutter App",
       description: "Native Flutter mobile app for Ethiopian Orthodox Church content with multi-platform support (Android, iOS, Web, Desktop) and offline capabilities.",
       url: "https://github.com/hailemariam-eyayu/gitsaweflutterapk",
+      liveUrl: "https://github.com/hailemariam-eyayu/gitsaweflutterapk/releases",
       category: "mobile",
       technologies: ["Flutter", "Dart", "SQLite"],
     },
@@ -246,6 +251,7 @@ export default function Home() {
       title: "Gitsawe Expo App",
       description: "Cross-platform React Native app with Expo featuring Bahire Hasab calculator, Mahlet prayer book, Bible reader, and Ethiopian calendar support.",
       url: "https://github.com/hailemariam-eyayu/gitsawe_expo_app",
+      liveUrl: "https://expo.dev/@hailemariam-eyayu/gitsawe-expo-app",
       category: "mobile",
       technologies: ["React Native", "Expo", "TypeScript"],
     },
@@ -254,6 +260,7 @@ export default function Home() {
       title: "Personal Portfolio",
       description: "Modern responsive portfolio website built with Next.js showcasing my skills, projects, and professional experience with smooth animations.",
       url: "https://github.com/hailemariam-eyayu/portfolio",
+      liveUrl: "https://hailemariam-eyayu.vercel.app/",
       category: "web",
       technologies: ["Next.js", "React", "Tailwind CSS", "TypeScript"],
     },
@@ -262,6 +269,7 @@ export default function Home() {
     title: "",
     description: "",
     url: "",
+    liveUrl: "",
     category: "web",
     technologies: "",
   });
@@ -277,11 +285,12 @@ export default function Home() {
       title: newProject.title,
       description: newProject.description,
       url: newProject.url,
+      liveUrl: newProject.liveUrl || undefined,
       category: newProject.category,
       technologies: newProject.technologies.split(",").map(t => t.trim()),
     };
     setProjects([...projects, project]);
-    setNewProject({ title: "", description: "", url: "", category: "web", technologies: "" });
+    setNewProject({ title: "", description: "", url: "", liveUrl: "", category: "web", technologies: "" });
     setShowAddProjectForm(false);
     
     // Save to localStorage
@@ -729,7 +738,7 @@ export default function Home() {
                           />
                         </div>
                         <div>
-                          <label className="block text-gray-700 font-semibold mb-2">Project URL</label>
+                          <label className="block text-gray-700 font-semibold mb-2">Project URL (GitHub)</label>
                           <input
                             type="url"
                             required
@@ -737,6 +746,16 @@ export default function Home() {
                             onChange={(e) => setNewProject({ ...newProject, url: e.target.value })}
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             placeholder="https://github.com/..."
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-gray-700 font-semibold mb-2">Live URL (Optional)</label>
+                          <input
+                            type="url"
+                            value={newProject.liveUrl}
+                            onChange={(e) => setNewProject({ ...newProject, liveUrl: e.target.value })}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="https://yourproject.vercel.app/"
                           />
                         </div>
                         <div>
@@ -803,15 +822,28 @@ export default function Home() {
                               ))}
                             </div>
                           )}
-                          <a
-                            href={project.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 text-blue-600 font-semibold hover:gap-3 transition-all duration-300"
-                          >
-                            View Project
-                            <i className="fas fa-arrow-right"></i>
-                          </a>
+                          <div className="flex gap-3">
+                            <a
+                              href={project.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 text-gray-600 font-semibold hover:text-gray-800 hover:gap-3 transition-all duration-300 flex-1 justify-center py-2 border border-gray-300 rounded-lg hover:border-gray-400"
+                            >
+                              <i className="fab fa-github"></i>
+                              View Code
+                            </a>
+                            {project.liveUrl && (
+                              <a
+                                href={project.liveUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold hover:from-blue-700 hover:to-purple-700 hover:gap-3 transition-all duration-300 flex-1 justify-center py-2 rounded-lg"
+                              >
+                                <i className="fas fa-external-link-alt"></i>
+                                View Live
+                              </a>
+                            )}
+                          </div>
                         </div>
                       </div>
                     ))}
