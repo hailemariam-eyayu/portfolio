@@ -185,6 +185,164 @@ interface Project {
   technologies?: string[];
 }
 
+interface EditModalProps {
+  project: Project;
+  onSave: (project: Project) => void;
+  onCancel: () => void;
+}
+
+const EditProjectModal = ({ project, onSave, onCancel }: EditModalProps) => {
+  const [editedProject, setEditedProject] = useState(project);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave(editedProject);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="p-6">
+          <h3 className="text-2xl font-bold mb-6 text-gray-800">Edit Project</h3>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-gray-700 font-semibold mb-2">Project Title</label>
+              <input
+                type="text"
+                required
+                value={editedProject.title}
+                onChange={(e) => setEditedProject({ ...editedProject, title: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-semibold mb-2">Description</label>
+              <textarea
+                required
+                value={editedProject.description}
+                onChange={(e) => setEditedProject({ ...editedProject, description: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                rows={4}
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-semibold mb-2">Project URL (GitHub)</label>
+              <input
+                type="url"
+                required
+                value={editedProject.url}
+                onChange={(e) => setEditedProject({ ...editedProject, url: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-semibold mb-2">Live URL (Optional)</label>
+              <input
+                type="url"
+                value={editedProject.liveUrl || ''}
+                onChange={(e) => setEditedProject({ ...editedProject, liveUrl: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-semibold mb-2">Category</label>
+              <select
+                value={editedProject.category}
+                onChange={(e) => setEditedProject({ ...editedProject, category: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="web">Web App</option>
+                <option value="mobile">Mobile App</option>
+                <option value="bot">Bot & API</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-gray-700 font-semibold mb-2">Technologies (comma-separated)</label>
+              <input
+                type="text"
+                value={editedProject.technologies?.join(', ') || ''}
+                onChange={(e) => setEditedProject({ 
+                  ...editedProject, 
+                  technologies: e.target.value.split(',').map(t => t.trim()) 
+                })}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            <div className="flex gap-3 pt-4">
+              <button
+                type="submit"
+                className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-semibold hover:shadow-xl transition-all duration-300"
+              >
+                Save Changes
+              </button>
+              <button
+                type="button"
+                onClick={onCancel}
+                className="flex-1 bg-gray-500 text-white py-3 rounded-lg font-semibold hover:bg-gray-600 transition-all duration-300"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const PasswordModal = ({ onSuccess, onCancel }: { onSuccess: () => void; onCancel: () => void }) => {
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Simple password check - in production, use proper authentication
+    if (password === 'admin123') {
+      onSuccess();
+    } else {
+      setError('Incorrect password. Please try again.');
+      setPassword('');
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
+        <h3 className="text-2xl font-bold mb-6 text-gray-800 text-center">Enter Admin Password</h3>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-gray-700 font-semibold mb-2">Password</label>
+            <input
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Enter admin password"
+            />
+            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+          </div>
+          <div className="flex gap-3 pt-4">
+            <button
+              type="submit"
+              className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-semibold hover:shadow-xl transition-all duration-300"
+            >
+              Unlock
+            </button>
+            <button
+              type="button"
+              onClick={onCancel}
+              className="flex-1 bg-gray-500 text-white py-3 rounded-lg font-semibold hover:bg-gray-600 transition-all duration-300"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -193,6 +351,10 @@ export default function Home() {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [activeFilter, setActiveFilter] = useState("all");
   const [showAddProjectForm, setShowAddProjectForm] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [projects, setProjects] = useState<Project[]>([
     {
       id: 1,
@@ -278,7 +440,49 @@ export default function Home() {
     ? projects 
     : projects.filter(p => p.category === activeFilter);
 
-  const handleAddProject = (e: React.FormEvent) => {
+  const handleEditProject = (project: Project) => {
+    if (isAuthenticated) {
+      setEditingProject(project);
+      setShowEditModal(true);
+    } else {
+      setEditingProject(project);
+      setShowPasswordModal(true);
+    }
+  };
+
+  const handlePasswordSuccess = () => {
+    setIsAuthenticated(true);
+    setShowPasswordModal(false);
+    if (editingProject) {
+      setShowEditModal(true);
+    }
+  };
+
+  const handleSaveProject = (updatedProject: Project) => {
+    const updatedProjects = projects.map(p => 
+      p.id === updatedProject.id ? updatedProject : p
+    );
+    setProjects(updatedProjects);
+    setShowEditModal(false);
+    setEditingProject(null);
+    
+    // Save to localStorage
+    if (typeof window !== "undefined") {
+      localStorage.setItem("portfolioProjects", JSON.stringify(updatedProjects));
+    }
+  };
+
+  const handleDeleteProject = (projectId: number) => {
+    if (isAuthenticated && confirm('Are you sure you want to delete this project?')) {
+      const updatedProjects = projects.filter(p => p.id !== projectId);
+      setProjects(updatedProjects);
+      
+      // Save to localStorage
+      if (typeof window !== "undefined") {
+        localStorage.setItem("portfolioProjects", JSON.stringify(updatedProjects));
+      }
+    }
+  };
     e.preventDefault();
     const project: Project = {
       id: projects.length + 1,
@@ -638,26 +842,6 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-
-              {/* Skills Summary */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-6 border-t border-gray-200">
-                <div className="text-center p-4 bg-blue-50 rounded-lg">
-                  <div className="text-3xl font-bold text-blue-600">3+</div>
-                  <div className="text-sm text-gray-600 mt-1">Years Experience</div>
-                </div>
-                <div className="text-center p-4 bg-green-50 rounded-lg">
-                  <div className="text-3xl font-bold text-green-600">15+</div>
-                  <div className="text-sm text-gray-600 mt-1">Technologies</div>
-                </div>
-                <div className="text-center p-4 bg-purple-50 rounded-lg">
-                  <div className="text-3xl font-bold text-purple-600">8+</div>
-                  <div className="text-sm text-gray-600 mt-1">Projects</div>
-                </div>
-                <div className="text-center p-4 bg-orange-50 rounded-lg">
-                  <div className="text-3xl font-bold text-orange-600">4</div>
-                  <div className="text-sm text-gray-600 mt-1">Platforms</div>
-                </div>
-              </div>
                 </div>
               </div>
             </section>
@@ -767,6 +951,7 @@ export default function Home() {
                           >
                             <option value="web">Web App</option>
                             <option value="mobile">Mobile App</option>
+                            <option value="bot">Bot & API</option>
                           </select>
                         </div>
                         <div>
@@ -802,11 +987,34 @@ export default function Home() {
                             <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                               project.category === "web"
                                 ? "bg-blue-100 text-blue-600"
-                                : "bg-purple-100 text-purple-600"
+                                : project.category === "mobile"
+                                ? "bg-purple-100 text-purple-600"
+                                : "bg-green-100 text-green-600"
                             }`}>
-                              {project.category === "web" ? "Web App" : "Mobile App"}
+                              {project.category === "web" ? "Web App" : project.category === "mobile" ? "Mobile App" : "Bot & API"}
                             </span>
-                            <i className={`fas ${project.category === "web" ? "fa-globe" : "fa-mobile-alt"} text-2xl text-gray-400`}></i>
+                            <div className="flex items-center gap-2">
+                              <i className={`fas ${
+                                project.category === "web" ? "fa-globe" : 
+                                project.category === "mobile" ? "fa-mobile-alt" : "fa-robot"
+                              } text-2xl text-gray-400`}></i>
+                              <button
+                                onClick={() => handleEditProject(project)}
+                                className="text-blue-500 hover:text-blue-700 transition-colors p-1"
+                                title="Edit Project"
+                              >
+                                <i className="fas fa-edit text-lg"></i>
+                              </button>
+                              {isAuthenticated && (
+                                <button
+                                  onClick={() => handleDeleteProject(project.id)}
+                                  className="text-red-500 hover:text-red-700 transition-colors p-1"
+                                  title="Delete Project"
+                                >
+                                  <i className="fas fa-trash text-lg"></i>
+                                </button>
+                              )}
+                            </div>
                           </div>
                           <h3 className="text-xl font-bold text-gray-800 mb-3">{project.title}</h3>
                           <p className="text-gray-600 mb-4 line-clamp-3">{project.description}</p>
@@ -1054,6 +1262,29 @@ export default function Home() {
             />
           </svg>
         </button>
+      )}
+
+      {/* Password Modal */}
+      {showPasswordModal && (
+        <PasswordModal
+          onSuccess={handlePasswordSuccess}
+          onCancel={() => {
+            setShowPasswordModal(false);
+            setEditingProject(null);
+          }}
+        />
+      )}
+
+      {/* Edit Project Modal */}
+      {showEditModal && editingProject && (
+        <EditProjectModal
+          project={editingProject}
+          onSave={handleSaveProject}
+          onCancel={() => {
+            setShowEditModal(false);
+            setEditingProject(null);
+          }}
+        />
       )}
     </>
   );
