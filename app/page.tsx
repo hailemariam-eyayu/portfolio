@@ -376,14 +376,23 @@ export default function Home() {
     },
     {
       id: 3,
-      title: "Dormitory Management System",
+      title: "DMUDMS - Dormitory Management System (Next.js)",
+      description: "Modern full-stack dormitory management system built with Next.js 15, TypeScript, and MongoDB. Features intelligent room assignment, gender-based block management, accessibility support, role-based dashboards, and comprehensive student/proctor management.",
+      url: "https://github.com/hailemariam-eyayu/dmudms_next",
+      liveUrl: "https://dmudms-next.vercel.app/",
+      category: "web",
+      technologies: ["Next.js", "TypeScript", "MongoDB", "NextAuth.js", "Tailwind CSS"],
+    },
+    {
+      id: 4,
+      title: "Dormitory Management System (Laravel)",
       description: "Comprehensive university dormitory management system with student registration, room allocation, payment tracking, and administrative dashboard.",
       url: "https://github.com/EdenMelkie/dmudms",
       category: "web",
       technologies: ["Laravel", "PHP", "MySQL", "Bootstrap"],
     },
     {
-      id: 4,
+      id: 5,
       title: "CV Builder Application",
       description: "Professional resume builder with multiple templates, real-time preview, PDF export, and responsive design for creating stunning CVs.",
       url: "https://github.com/hailemariam-eyayu/cv-builder",
@@ -392,7 +401,7 @@ export default function Home() {
       technologies: ["React", "TypeScript", "Tailwind CSS", "PDF.js"],
     },
     {
-      id: 5,
+      id: 6,
       title: "Gitsawe Flutter App",
       description: "Native Flutter mobile app for Ethiopian Orthodox Church content with multi-platform support (Android, iOS, Web, Desktop) and offline capabilities.",
       url: "https://github.com/hailemariam-eyayu/gitsaweflutterapk",
@@ -401,7 +410,7 @@ export default function Home() {
       technologies: ["Flutter", "Dart", "SQLite"],
     },
     {
-      id: 6,
+      id: 7,
       title: "Gitsawe React Native App",
       description: "Bare React Native mobile app with full native control, TypeScript support, and Ethiopian Orthodox Church services integration.",
       url: "https://github.com/hailemariam-eyayu/GitsaweReactNative",
@@ -409,7 +418,7 @@ export default function Home() {
       technologies: ["React Native", "TypeScript", "AsyncStorage"],
     },
     {
-      id: 7,
+      id: 8,
       title: "Gitsawe Expo App",
       description: "Cross-platform React Native app with Expo featuring Bahire Hasab calculator, Mahlet prayer book, Bible reader, and Ethiopian calendar support.",
       url: "https://github.com/hailemariam-eyayu/gitsawe_expo_app",
@@ -418,7 +427,7 @@ export default function Home() {
       technologies: ["React Native", "Expo", "TypeScript"],
     },
     {
-      id: 8,
+      id: 9,
       title: "Personal Portfolio",
       description: "Modern responsive portfolio website built with Next.js showcasing my skills, projects, and professional experience with smooth animations.",
       url: "https://github.com/hailemariam-eyayu/portfolio",
