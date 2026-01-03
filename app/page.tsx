@@ -196,50 +196,66 @@ export default function Home() {
     {
       id: 1,
       title: "Gitsawe Web App",
-      description: "Full-stack Ethiopian Orthodox Church platform with React, Node.js, Express, and MongoDB. Features news system, book library, and calendar.",
+      description: "Full-stack Ethiopian Orthodox Church platform with React, Node.js, Express, and MongoDB. Features news system, book library, calendar, and automatic Telegram bot broadcasts.",
       url: "https://github.com/hailemariam-eyayu/GitsaweTailwind",
       category: "web",
-      technologies: ["React", "Node.js", "MongoDB", "Express"],
+      technologies: ["React", "Node.js", "MongoDB", "Express", "Tailwind CSS"],
     },
     {
       id: 2,
+      title: "Ethiopian Orthodox Telegram Bots",
+      description: "Three automated Telegram bots for daily Ethiopian Orthodox readings (Gitsawe & Sinksar) with MongoDB integration, cron scheduling, and beautiful message formatting.",
+      url: "https://github.com/hailemariam-eyayu/gitsawebot",
+      category: "bot",
+      technologies: ["Node.js", "MongoDB", "Telegram API", "Cron Jobs"],
+    },
+    {
+      id: 3,
+      title: "Dormitory Management System",
+      description: "Comprehensive university dormitory management system with student registration, room allocation, payment tracking, and administrative dashboard.",
+      url: "https://github.com/EdenMelkie/dmudms",
+      category: "web",
+      technologies: ["Laravel", "PHP", "MySQL", "Bootstrap"],
+    },
+    {
+      id: 4,
+      title: "CV Builder Application",
+      description: "Professional resume builder with multiple templates, real-time preview, PDF export, and responsive design for creating stunning CVs.",
+      url: "https://github.com/hailemariam-eyayu/cv-builder",
+      category: "web",
+      technologies: ["React", "TypeScript", "Tailwind CSS", "PDF.js"],
+    },
+    {
+      id: 5,
+      title: "Gitsawe Flutter App",
+      description: "Native Flutter mobile app for Ethiopian Orthodox Church content with multi-platform support (Android, iOS, Web, Desktop) and offline capabilities.",
+      url: "https://github.com/hailemariam-eyayu/gitsaweflutterapk",
+      category: "mobile",
+      technologies: ["Flutter", "Dart", "SQLite"],
+    },
+    {
+      id: 6,
+      title: "Gitsawe React Native App",
+      description: "Bare React Native mobile app with full native control, TypeScript support, and Ethiopian Orthodox Church services integration.",
+      url: "https://github.com/hailemariam-eyayu/GitsaweReactNative",
+      category: "mobile",
+      technologies: ["React Native", "TypeScript", "AsyncStorage"],
+    },
+    {
+      id: 7,
       title: "Gitsawe Expo App",
-      description: "React Native mobile app with Expo featuring Bahire Hasab calculator, Mahlet prayer book, Bible reader, and Ethiopian calendar support.",
+      description: "Cross-platform React Native app with Expo featuring Bahire Hasab calculator, Mahlet prayer book, Bible reader, and Ethiopian calendar support.",
       url: "https://github.com/hailemariam-eyayu/gitsawe_expo_app",
       category: "mobile",
       technologies: ["React Native", "Expo", "TypeScript"],
     },
     {
-      id: 3,
-      title: "Gitsawe Flutter App",
-      description: "Native Flutter mobile app for Ethiopian Orthodox Church content with multi-platform support (Android, iOS, Web, Desktop).",
-      url: "https://github.com/hailemariam-eyayu/gitsaweflutterapk",
-      category: "mobile",
-      technologies: ["Flutter", "Dart"],
-    },
-    {
-      id: 4,
-      title: "Gitsawe React Native App",
-      description: "Bare React Native mobile app with full native control and TypeScript support for Ethiopian Orthodox Church services.",
-      url: "https://github.com/hailemariam-eyayu/GitsaweReactNative",
-      category: "mobile",
-      technologies: ["React Native", "TypeScript"],
-    },
-    {
-      id: 5,
-      title: "Dormitory Management System",
-      description: "A comprehensive Laravel + PHP system for managing university dormitories.",
-      url: "https://github.com/EdenMelkie/dmudms",
-      category: "web",
-      technologies: ["Laravel", "PHP", "MySQL"],
-    },
-    {
-      id: 6,
+      id: 8,
       title: "Personal Portfolio",
-      description: "Responsive website built with Next.js showcasing my skills and projects.",
+      description: "Modern responsive portfolio website built with Next.js showcasing my skills, projects, and professional experience with smooth animations.",
       url: "https://github.com/hailemariam-eyayu/portfolio",
       category: "web",
-      technologies: ["Next.js", "React", "Tailwind CSS"],
+      technologies: ["Next.js", "React", "Tailwind CSS", "TypeScript"],
     },
   ]);
   const [newProject, setNewProject] = useState({
@@ -453,7 +469,7 @@ export default function Home() {
                   </div>
                   <div className="text-center">
                     <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-pink-600 to-red-600 bg-clip-text text-transparent mb-2">
-                      6+
+                      8+
                     </div>
                     <div className="text-gray-600 font-medium">Projects</div>
                   </div>
@@ -625,7 +641,7 @@ export default function Home() {
                   <div className="text-sm text-gray-600 mt-1">Technologies</div>
                 </div>
                 <div className="text-center p-4 bg-purple-50 rounded-lg">
-                  <div className="text-3xl font-bold text-purple-600">6+</div>
+                  <div className="text-3xl font-bold text-purple-600">8+</div>
                   <div className="text-sm text-gray-600 mt-1">Projects</div>
                 </div>
                 <div className="text-center p-4 bg-orange-50 rounded-lg">
@@ -647,7 +663,7 @@ export default function Home() {
                     </h2>
                     <div className="w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 mx-auto rounded-full mb-8"></div>
                     <p className="text-gray-600 max-w-2xl mx-auto">
-                      Explore my latest projects showcasing expertise in web and mobile development
+                      Explore my latest projects showcasing expertise in web development, mobile apps, and bot automation
                     </p>
                   </div>
 
@@ -657,6 +673,7 @@ export default function Home() {
                       { label: "All Projects", value: "all", icon: "fa-th" },
                       { label: "Web Apps", value: "web", icon: "fa-globe" },
                       { label: "Mobile Apps", value: "mobile", icon: "fa-mobile-alt" },
+                      { label: "Bots & APIs", value: "bot", icon: "fa-robot" },
                     ].map((filter) => (
                       <button
                         key={filter.value}
