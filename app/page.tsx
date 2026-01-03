@@ -483,6 +483,8 @@ export default function Home() {
       }
     }
   };
+
+  const handleAddProject = (e: React.FormEvent) => {
     e.preventDefault();
     const project: Project = {
       id: projects.length + 1,
@@ -572,8 +574,7 @@ export default function Home() {
         setMobileMenuOpen={setMobileMenuOpen}
       />
 
-      <main className="pt-20">
-          <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
+      <main className="pt-20 min-h-screen bg-gray-50 text-gray-900 font-sans">
             {/* Hero Section */}
             <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 py-20 md:py-32">
               <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
@@ -1237,7 +1238,6 @@ export default function Home() {
                 </div>
               </div>
             </footer>
-          </div>
         </main>
 
       {/* Scroll to Top Button */}
