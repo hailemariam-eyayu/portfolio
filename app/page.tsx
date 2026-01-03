@@ -461,6 +461,15 @@ export default function Home() {
       category: "web",
       technologies: ["Next.js", "React", "Tailwind CSS", "TypeScript"],
     },
+    {
+      id: 10,
+      title: "🧪 TEST PROJECT - DELETE ME",
+      description: "This is a test project created to demonstrate the password-protected delete functionality. You can safely delete this project to test the admin features.",
+      url: "https://github.com/example/test-project",
+      liveUrl: "https://test-project-demo.vercel.app/",
+      category: "web",
+      technologies: ["React", "JavaScript", "CSS"],
+    },
   ]);
   const [newProject, setNewProject] = useState({
     title: "",
