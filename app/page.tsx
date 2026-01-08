@@ -1172,13 +1172,12 @@ export default function Home() {
               <ul className="list-disc list-inside space-y-2">
                 <li>
                   <a
-                    href="/files/Hailemariam_Eyayu_CV.pdf"
+                    href="https://www.canva.com/design/DAGs2oZ685w/K_xVgJR2cBqwF32pHDof0g/edit?utm_content=DAGs2oZ685w&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:underline"
-                    download
                   >
-                    Download CV (PDF)
+                    View My CV (Canva)
                   </a>{" "}
                   – Detailed resume with professional experience and education.
                 </li>
