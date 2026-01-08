@@ -587,45 +587,38 @@ export default function Home() {
 
                                     <li>
                                         <a
-                                            href="/files/Certificate_Laravel_2024.pdf"
+                                            href="https://www.linkedin.com/in/hailemariam-eyayu/details/certifications/"
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="text-blue-600 hover:underline"
-                                            download
                                         >
-                                            Laravel Certification (2024)
+                                            5 Million Coders Certificate
                                         </a>{" "}
-                                        – Completion certificate for advanced
-                                        Laravel development.
+                                        – Certification from the 5 Million Coders initiative.
                                     </li>
 
                                     <li>
                                         <a
-                                            href="/files/Certificate_Flutter_2023.pdf"
+                                            href="https://www.linkedin.com/in/hailemariam-eyayu/details/certifications/"
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="text-blue-600 hover:underline"
-                                            download
                                         >
-                                            Flutter Development Certificate
-                                            (2023)
+                                            EthioCoders SSE Certificate
                                         </a>{" "}
-                                        – Training and proficiency in Flutter &
-                                        Dart.
+                                        – Software Systems Engineering certification developed by MoE Ethiopian.
                                     </li>
 
                                     <li>
                                         <a
-                                            href="/files/Other_Certificates.pdf"
+                                            href="https://www.linkedin.com/in/hailemariam-eyayu/details/certifications/"
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="text-blue-600 hover:underline"
-                                            download
                                         >
-                                            Other Certificates (PDF)
+                                            Understanding Phishing Certificate
                                         </a>{" "}
-                                        – Various professional and technical
-                                        certificates.
+                                        – Security awareness certification by Enat Bank SC.
                                     </li>
                                 </ul>
                             </section>
