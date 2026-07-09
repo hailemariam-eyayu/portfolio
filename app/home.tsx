@@ -215,7 +215,7 @@ export default function Home() {
                     <div className="min-h-screen flex flex-col items-center bg-gray-50 text-gray-900 font-sans">
                         <header className="flex flex-col items-center mb-8 text-center">
                             <img
-                                src="/images/HME.png"
+                                src="/images/HME.jpg"
                                 alt="Hailemariam Eyayu"
                                 className="w-36 h-36 rounded-full object-cover shadow-md mb-4"
                                 loading="lazy"
