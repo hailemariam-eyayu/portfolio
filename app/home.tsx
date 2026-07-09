@@ -705,7 +705,7 @@ export default function Home() {
                                     </a>
 
                                     <a
-                                        href="https://t.me/HaileEden"
+                                        href="https://t.me/Hailemariam_Eyayu"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="hover:text-pink-400 transition-colors duration-300 flex items-center space-x-2"
