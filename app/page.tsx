@@ -3,7 +3,188 @@
 import React, { useState, useEffect } from "react";
 import "aos/dist/aos.css";
 
-// ── Profile types ──────────────────────────────────────────────────────────────
+// ── Skill types ────────────────────────────────────────────────────────────────
+interface SkillCategory {
+  id: string;
+  title: string;
+  icon: string;
+  color: string;
+  bg: string;
+  border: string;
+  badge: string;
+  skills: string[];
+}
+
+const DEFAULT_SKILL_CATEGORIES: SkillCategory[] = [
+  {
+    id: 'lang', title: 'Languages & Frameworks', icon: 'fa-code',
+    color: 'from-blue-500 to-purple-500', bg: 'from-blue-50 to-purple-50',
+    border: 'border-blue-200', badge: 'bg-blue-100 text-blue-700',
+    skills: ['JavaScript','TypeScript','React','Next.js','Node.js','Express','PHP','Laravel','Dart','Flutter'],
+  },
+  {
+    id: 'mobile', title: 'Mobile Development', icon: 'fa-mobile-alt',
+    color: 'from-green-500 to-teal-500', bg: 'from-green-50 to-teal-50',
+    border: 'border-green-200', badge: 'bg-green-100 text-green-700',
+    skills: ['Flutter','React Native','Expo','Dart','Android','iOS','Cross-platform','Mobile UI/UX'],
+  },
+  {
+    id: 'db', title: 'Databases & DevOps', icon: 'fa-database',
+    color: 'from-orange-500 to-red-500', bg: 'from-orange-50 to-red-50',
+    border: 'border-orange-200', badge: 'bg-orange-100 text-orange-700',
+    skills: ['MongoDB','MySQL','PostgreSQL','SQLite','Git','GitHub','CI/CD','Vercel','Docker','REST API'],
+  },
+];
+
+// ── Edit Skills Modal ──────────────────────────────────────────────────────────
+const EditSkillsModal = ({
+  categories,
+  onSave,
+  onCancel,
+}: {
+  categories: SkillCategory[];
+  onSave: (cats: SkillCategory[]) => void;
+  onCancel: () => void;
+}) => {
+  const [cats, setCats] = useState<SkillCategory[]>(categories.map(c => ({ ...c, skills: [...c.skills] })));
+  const [newSkill, setNewSkill] = useState<Record<string, string>>({});
+  const [newCatTitle, setNewCatTitle] = useState('');
+
+  const updateCatTitle = (id: string, title: string) =>
+    setCats(prev => prev.map(c => c.id === id ? { ...c, title } : c));
+
+  const removeSkill = (catId: string, skill: string) =>
+    setCats(prev => prev.map(c => c.id === catId ? { ...c, skills: c.skills.filter(s => s !== skill) } : c));
+
+  const addSkill = (catId: string) => {
+    const s = newSkill[catId]?.trim();
+    if (!s) return;
+    setCats(prev => prev.map(c => c.id === catId && !c.skills.includes(s) ? { ...c, skills: [...c.skills, s] } : c));
+    setNewSkill(p => ({ ...p, [catId]: '' }));
+  };
+
+  const addCategory = () => {
+    if (!newCatTitle.trim()) return;
+    const id = Date.now().toString();
+    setCats(prev => [...prev, {
+      id, title: newCatTitle.trim(), icon: 'fa-star',
+      color: 'from-purple-500 to-pink-500', bg: 'from-purple-50 to-pink-50',
+      border: 'border-purple-200', badge: 'bg-purple-100 text-purple-700',
+      skills: [],
+    }]);
+    setNewCatTitle('');
+  };
+
+  const removeCategory = (id: string) => setCats(prev => prev.filter(c => c.id !== id));
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-white px-6 py-4 border-b border-gray-100 flex items-center justify-between rounded-t-2xl">
+          <h3 className="text-xl font-bold text-gray-800">📈 Manage Skills</h3>
+          <button onClick={onCancel} className="text-gray-400 hover:text-gray-600 transition-colors">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="p-6 space-y-5">
+          {/* Categories */}
+          {cats.map((cat) => (
+            <div key={cat.id} className={`border ${cat.border} rounded-xl overflow-hidden`}>
+              {/* Category header */}
+              <div className={`bg-gradient-to-r ${cat.bg} px-4 py-3 flex items-center gap-3`}>
+                <i className={`fas ${cat.icon} text-gray-600 w-4`}></i>
+                <input
+                  value={cat.title}
+                  onChange={(e) => updateCatTitle(cat.id, e.target.value)}
+                  className="flex-1 bg-transparent font-bold text-gray-800 text-sm focus:outline-none border-b border-transparent focus:border-gray-400"
+                />
+                <button
+                  onClick={() => removeCategory(cat.id)}
+                  className="text-red-400 hover:text-red-600 text-xs font-semibold transition-colors"
+                >
+                  Remove
+                </button>
+              </div>
+
+              {/* Skills chips */}
+              <div className="p-4 space-y-3">
+                <div className="flex flex-wrap gap-2">
+                  {cat.skills.map((skill) => (
+                    <span
+                      key={skill}
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 ${cat.badge} rounded-full text-sm font-medium border ${cat.border}`}
+                    >
+                      {skill}
+                      <button
+                        onClick={() => removeSkill(cat.id, skill)}
+                        className="text-current opacity-50 hover:opacity-100 leading-none"
+                        aria-label={`Remove ${skill}`}
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                </div>
+                {/* Add skill */}
+                <div className="flex gap-2">
+                  <input
+                    value={newSkill[cat.id] || ''}
+                    onChange={(e) => setNewSkill(p => ({ ...p, [cat.id]: e.target.value }))}
+                    onKeyDown={(e) => e.key === 'Enter' && addSkill(cat.id)}
+                    placeholder="Add skill..."
+                    className="flex-1 px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <button
+                    onClick={() => addSkill(cat.id)}
+                    className={`px-3 py-1.5 bg-gradient-to-r ${cat.color} text-white text-sm rounded-lg font-medium hover:shadow-md transition-all`}
+                  >
+                    + Add
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {/* Add new category */}
+          <div className="flex gap-2 pt-2 border-t border-gray-100">
+            <input
+              value={newCatTitle}
+              onChange={(e) => setNewCatTitle(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && addCategory()}
+              placeholder="New category title..."
+              className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <button
+              onClick={addCategory}
+              className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm rounded-lg font-medium hover:shadow-md transition-all whitespace-nowrap"
+            >
+              + Category
+            </button>
+          </div>
+
+          {/* Save / Cancel */}
+          <div className="flex gap-3 pt-2">
+            <button
+              onClick={() => onSave(cats)}
+              className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-semibold hover:shadow-xl transition-all"
+            >
+              💾 Save Skills
+            </button>
+            <button
+              onClick={onCancel}
+              className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 interface ProfileInfo {
   name: string;
   tagline: string;
@@ -641,6 +822,11 @@ export default function Home() {
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
   const [showProfilePasswordModal, setShowProfilePasswordModal] = useState(false);
 
+  // ── Skills state ──────────────────────────────────────────────────────────────
+  const [skillCategories, setSkillCategories] = useState<SkillCategory[]>(DEFAULT_SKILL_CATEGORIES);
+  const [showEditSkillsModal, setShowEditSkillsModal] = useState(false);
+  const [pendingSkillsEdit, setPendingSkillsEdit] = useState(false);
+
   const filteredProjects = activeFilter === "all" 
     ? projects 
     : projects.filter(p => p.category === activeFilter);
@@ -741,6 +927,23 @@ export default function Home() {
     }
   };
 
+  const handleSaveSkills = (updated: SkillCategory[]) => {
+    setSkillCategories(updated);
+    setShowEditSkillsModal(false);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("portfolioSkills", JSON.stringify(updated));
+    }
+  };
+
+  const handleEditSkillsClick = () => {
+    if (isAuthenticated) {
+      setShowEditSkillsModal(true);
+    } else {
+      setPendingSkillsEdit(true);
+      setShowProfilePasswordModal(true);
+    }
+  };
+
   const handleEditProfileClick = () => {
     if (isAuthenticated) {
       setShowEditProfileModal(true);
@@ -752,7 +955,13 @@ export default function Home() {
   const handleProfilePasswordSuccess = () => {
     setIsAuthenticated(true);
     setShowProfilePasswordModal(false);
-    setShowEditProfileModal(true);
+    // open whichever admin action triggered the password
+    if (pendingSkillsEdit) {
+      setPendingSkillsEdit(false);
+      setShowEditSkillsModal(true);
+    } else {
+      setShowEditProfileModal(true);
+    }
   };
 
   const handleAddProject = (e: React.FormEvent) => {
@@ -780,14 +989,13 @@ export default function Home() {
     // Load projects from localStorage
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("portfolioProjects");
-      if (saved) {
-        setProjects(JSON.parse(saved));
-      }
+      if (saved) setProjects(JSON.parse(saved));
       // Load profile
       const savedProfile = localStorage.getItem("portfolioProfile");
-      if (savedProfile) {
-        setProfileInfo(JSON.parse(savedProfile));
-      }
+      if (savedProfile) setProfileInfo(JSON.parse(savedProfile));
+      // Load skills
+      const savedSkills = localStorage.getItem("portfolioSkills");
+      if (savedSkills) setSkillCategories(JSON.parse(savedSkills));
     }
   }, []);
   const toggleDarkMode = () => {
@@ -1028,41 +1236,21 @@ export default function Home() {
                     <h2 className="text-4xl md:text-5xl font-bold mb-4">
                       Skills &amp; <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Expertise</span>
                     </h2>
-                    <div className="w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 mx-auto rounded-full"></div>
+                    <div className="w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 mx-auto rounded-full mb-6"></div>
+                    {/* Manage Skills button — always visible, password-protected */}
+                    <button
+                        onClick={handleEditSkillsClick}
+                        className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-5 py-2 rounded-full text-sm font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300"
+                      >
+                        <i className="fas fa-edit"></i>
+                        Manage Skills
+                      </button>
                   </div>
 
-                  {/* Skill cards — horizontal badge grid */}
-                  {[
-                    {
-                      title: 'Languages & Frameworks',
-                      icon: 'fa-code',
-                      color: 'from-blue-500 to-purple-500',
-                      bg: 'from-blue-50 to-purple-50',
-                      border: 'border-blue-200',
-                      badge: 'bg-blue-100 text-blue-700',
-                      skills: ['JavaScript','TypeScript','React','Next.js','Node.js','Express','PHP','Laravel','Dart','Flutter'],
-                    },
-                    {
-                      title: 'Mobile Development',
-                      icon: 'fa-mobile-alt',
-                      color: 'from-green-500 to-teal-500',
-                      bg: 'from-green-50 to-teal-50',
-                      border: 'border-green-200',
-                      badge: 'bg-green-100 text-green-700',
-                      skills: ['Flutter','React Native','Expo','Dart','Android','iOS','Cross-platform','Mobile UI/UX'],
-                    },
-                    {
-                      title: 'Databases & DevOps',
-                      icon: 'fa-database',
-                      color: 'from-orange-500 to-red-500',
-                      bg: 'from-orange-50 to-red-50',
-                      border: 'border-orange-200',
-                      badge: 'bg-orange-100 text-orange-700',
-                      skills: ['MongoDB','MySQL','PostgreSQL','SQLite','Git','GitHub','CI/CD','Vercel','Docker','REST API'],
-                    },
-                  ].map((cat) => (
+                  {/* Skill cards — driven by skillCategories state */}
+                  {skillCategories.map((cat) => (
                     <div
-                      key={cat.title}
+                      key={cat.id}
                       className={`bg-gradient-to-br ${cat.bg} rounded-2xl p-6 mb-6 shadow-lg hover:shadow-xl transition-shadow duration-300 border ${cat.border}`}
                     >
                       <h4 className="text-xl font-bold text-gray-800 mb-5 flex items-center gap-3">
@@ -1562,7 +1750,16 @@ export default function Home() {
         <PasswordModal
           action="edit"
           onSuccess={handleProfilePasswordSuccess}
-          onCancel={() => setShowProfilePasswordModal(false)}
+          onCancel={() => { setShowProfilePasswordModal(false); setPendingSkillsEdit(false); }}
+        />
+      )}
+
+      {/* Edit Skills Modal */}
+      {showEditSkillsModal && (
+        <EditSkillsModal
+          categories={skillCategories}
+          onSave={handleSaveSkills}
+          onCancel={() => setShowEditSkillsModal(false)}
         />
       )}
     </>
