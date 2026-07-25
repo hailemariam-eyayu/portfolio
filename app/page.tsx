@@ -3,6 +3,138 @@
 import React, { useState, useEffect } from "react";
 import "aos/dist/aos.css";
 
+// ── Profile types ──────────────────────────────────────────────────────────────
+interface ProfileInfo {
+  name: string;
+  tagline: string;
+  bio: string;
+  bio2: string;
+  email: string;
+  phone: string;
+  telegram: string;
+  github: string;
+  imageUrl: string;
+  cvUrl: string;
+  location: string;
+}
+
+const DEFAULT_PROFILE: ProfileInfo = {
+  name: "Hailemariam Eyayu",
+  tagline: "Full-Stack & Mobile Developer",
+  bio: "With over 3 years of experience, I have developed a deep understanding of modern technologies including Flutter, Laravel, React, Node.js, and PHP. I am a strong advocate of clean code, user-centered design, and continuous learning.",
+  bio2: "Recently, I developed Gitsawe - a comprehensive multi-platform Ethiopian Orthodox Church application featuring a full-stack web app (React, Node.js, MongoDB) and three mobile implementations (Expo, Flutter, React Native). The project showcases my expertise in building scalable, cross-platform solutions with modern CI/CD practices.",
+  email: "hailemariameyayu2012@gmail.com",
+  phone: "+251938169557",
+  telegram: "https://t.me/HaileEden",
+  github: "https://github.com/hailemariam-eyayu",
+  imageUrl: "/images/HME.png",
+  cvUrl: "https://www.canva.com/design/DAGs2oZ685w/K_xVgJR2cBqwF32pHDof0g/edit?utm_content=DAGs2oZ685w&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton",
+  location: "Addis Ababa, Ethiopia",
+};
+
+// ── Edit Profile Modal ─────────────────────────────────────────────────────────
+const EditProfileModal = ({
+  profile,
+  onSave,
+  onCancel,
+}: {
+  profile: ProfileInfo;
+  onSave: (p: ProfileInfo) => void;
+  onCancel: () => void;
+}) => {
+  const [form, setForm] = useState<ProfileInfo>({ ...profile });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave(form);
+  };
+
+  const field = (
+    label: string,
+    key: keyof ProfileInfo,
+    type: string = "text",
+    rows?: number
+  ) => (
+    <div key={key}>
+      <label className="block text-gray-700 font-semibold mb-1 text-sm">{label}</label>
+      {rows ? (
+        <textarea
+          rows={rows}
+          value={form[key]}
+          onChange={(e) => setForm({ ...form, [key]: e.target.value })}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm resize-none"
+        />
+      ) : (
+        <input
+          type={type}
+          value={form[key]}
+          onChange={(e) => setForm({ ...form, [key]: e.target.value })}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+        />
+      )}
+    </div>
+  );
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-white px-6 py-4 border-b border-gray-100 flex items-center justify-between rounded-t-2xl">
+          <h3 className="text-xl font-bold text-gray-800">✏️ Edit Profile & Contact</h3>
+          <button onClick={onCancel} className="text-gray-400 hover:text-gray-600 transition-colors">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {field("Full Name", "name")}
+            {field("Tagline (subtitle under name)", "tagline")}
+            {field("Email", "email", "email")}
+            {field("Phone", "phone", "tel")}
+            {field("Telegram URL", "telegram")}
+            {field("GitHub URL", "github")}
+            {field("Profile Image URL", "imageUrl")}
+            {field("CV URL", "cvUrl")}
+            {field("Location", "location")}
+          </div>
+          {field("Bio (paragraph 1)", "bio", "text", 3)}
+          {field("Bio (paragraph 2)", "bio2", "text", 3)}
+
+          {/* Live preview of image */}
+          {form.imageUrl && (
+            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+              <img
+                src={form.imageUrl}
+                alt="Preview"
+                className="w-14 h-14 rounded-full object-cover border-2 border-gray-200"
+                onError={(e) => { (e.currentTarget as HTMLImageElement).src = "/images/HME.png"; }}
+              />
+              <span className="text-sm text-gray-500">Profile image preview</span>
+            </div>
+          )}
+
+          <div className="flex gap-3 pt-2">
+            <button
+              type="submit"
+              className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-semibold hover:shadow-xl transition-all duration-300"
+            >
+              💾 Save Changes
+            </button>
+            <button
+              type="button"
+              onClick={onCancel}
+              className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-300"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 const Header = ({ 
   toggleDarkMode, 
   isDarkMode, 
@@ -480,6 +612,11 @@ export default function Home() {
     technologies: "",
   });
 
+  // ── Profile state ────────────────────────────────────────────────────────────
+  const [profileInfo, setProfileInfo] = useState<ProfileInfo>(DEFAULT_PROFILE);
+  const [showEditProfileModal, setShowEditProfileModal] = useState(false);
+  const [showProfilePasswordModal, setShowProfilePasswordModal] = useState(false);
+
   const filteredProjects = activeFilter === "all" 
     ? projects 
     : projects.filter(p => p.category === activeFilter);
@@ -572,6 +709,28 @@ export default function Home() {
     }
   };
 
+  const handleSaveProfile = (updated: ProfileInfo) => {
+    setProfileInfo(updated);
+    setShowEditProfileModal(false);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("portfolioProfile", JSON.stringify(updated));
+    }
+  };
+
+  const handleEditProfileClick = () => {
+    if (isAuthenticated) {
+      setShowEditProfileModal(true);
+    } else {
+      setShowProfilePasswordModal(true);
+    }
+  };
+
+  const handleProfilePasswordSuccess = () => {
+    setIsAuthenticated(true);
+    setShowProfilePasswordModal(false);
+    setShowEditProfileModal(true);
+  };
+
   const handleAddProject = (e: React.FormEvent) => {
     e.preventDefault();
     const project: Project = {
@@ -599,6 +758,11 @@ export default function Home() {
       const saved = localStorage.getItem("portfolioProjects");
       if (saved) {
         setProjects(JSON.parse(saved));
+      }
+      // Load profile
+      const savedProfile = localStorage.getItem("portfolioProfile");
+      if (savedProfile) {
+        setProfileInfo(JSON.parse(savedProfile));
       }
     }
   }, []);
@@ -672,8 +836,8 @@ export default function Home() {
                   <div className="relative" data-aos="fade-right">
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur-2xl opacity-30 animate-pulse"></div>
                     <img
-                      src="/images/HME.png"
-                      alt="Hailemariam Eyayu"
+                      src={profileInfo.imageUrl || "/images/HME.png"}
+                      alt={profileInfo.name}
                       className="relative w-64 h-64 md:w-80 md:h-80 rounded-full object-cover shadow-2xl border-8 border-white"
                       loading="lazy"
                     />
@@ -687,10 +851,10 @@ export default function Home() {
                       </span>
                     </div>
                     <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                      Hailemariam Eyayu
+                      {profileInfo.name}
                     </h1>
                     <p className="text-2xl md:text-3xl text-gray-700 font-semibold mb-6">
-                      Full-Stack & Mobile Developer
+                      {profileInfo.tagline}
                     </p>
                     <p className="text-lg text-gray-600 mb-8 max-w-2xl">
                       Crafting exceptional digital experiences with modern technologies. 
@@ -716,7 +880,7 @@ export default function Home() {
                     {/* Social Links */}
                     <div className="flex gap-4 mt-8 justify-center md:justify-start">
                       <a
-                        href="https://github.com/hailemariam-eyayu"
+                        href={profileInfo.github}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300"
@@ -725,7 +889,7 @@ export default function Home() {
                         <i className="fab fa-github text-gray-800 text-xl"></i>
                       </a>
                       <a
-                        href="https://t.me/HaileEden"
+                        href={profileInfo.telegram}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300"
@@ -734,19 +898,29 @@ export default function Home() {
                         <i className="fab fa-telegram text-blue-500 text-xl"></i>
                       </a>
                       <a
-                        href="mailto:hailemariameyayu2012@gmail.com"
+                        href={`mailto:${profileInfo.email}`}
                         className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300"
                         title="Email"
                       >
                         <i className="fas fa-envelope text-red-500 text-xl"></i>
                       </a>
-                      <a
-                        href="tel:+251938169557"
+                      {profileInfo.phone && (
+                        <a
+                          href={`tel:${profileInfo.phone}`}
+                          className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300"
+                          title="Phone"
+                        >
+                          <i className="fas fa-phone text-green-500 text-xl"></i>
+                        </a>
+                      )}
+                      {/* Edit Profile button — always visible so you can reach admin */}
+                      <button
+                        onClick={handleEditProfileClick}
                         className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300"
-                        title="Phone"
+                        title="Edit Profile (Admin)"
                       >
-                        <i className="fas fa-phone text-green-500 text-xl"></i>
-                      </a>
+                        <i className="fas fa-user-edit text-purple-500 text-xl"></i>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -800,16 +974,10 @@ export default function Home() {
                     <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full -mr-32 -mt-32 opacity-50"></div>
                     <div className="relative z-10">
                       <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                        With over <span className="font-bold text-blue-600">3 years of experience</span>, I have developed a deep
-                        understanding of modern technologies including <span className="font-semibold">Flutter, Laravel,
-                        React, Node.js, and PHP</span>. I am a strong advocate of clean code,
-                        user-centered design, and continuous learning.
+                        {profileInfo.bio}
                       </p>
                       <p className="text-lg text-gray-700 leading-relaxed">
-                        Recently, I developed <span className="font-bold text-purple-600">Gitsawe</span> - a comprehensive multi-platform Ethiopian Orthodox Church application 
-                        featuring a full-stack web app (React, Node.js, MongoDB) and three mobile implementations 
-                        (Expo, Flutter, React Native). The project showcases my expertise in building scalable, 
-                        cross-platform solutions with modern CI/CD practices.
+                        {profileInfo.bio2}
                       </p>
                       
                       <div className="mt-8 flex flex-wrap gap-3">
@@ -1275,13 +1443,12 @@ export default function Home() {
             <footer className="w-full bg-gradient-to-r from-indigo-900 via-purple-900 to-pink-900 text-gray-100 py-6 mt-12">
               <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
                 <p className="text-sm">
-                  &copy; {new Date().getFullYear()} Hailemariam Eyayu. All
-                  rights reserved.
+                  &copy; {new Date().getFullYear()} {profileInfo.name}. All rights reserved.
                 </p>
 
                 <div className="space-x-6 mt-4 md:mt-0 flex">
                   <a
-                    href="mailto:hailemariameyayu2012@gmail.com"
+                    href={`mailto:${profileInfo.email}`}
                     className="hover:text-pink-400 transition-colors duration-300 flex items-center space-x-2"
                     aria-label="Email"
                   >
@@ -1290,7 +1457,7 @@ export default function Home() {
                   </a>
 
                   <a
-                    href="https://t.me/HaileEden"
+                    href={profileInfo.telegram}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:text-pink-400 transition-colors duration-300 flex items-center space-x-2"
@@ -1301,7 +1468,7 @@ export default function Home() {
                   </a>
 
                   <a
-                    href="https://github.com/EdenMelkie"
+                    href={profileInfo.github}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:text-pink-400 transition-colors duration-300 flex items-center space-x-2"
@@ -1311,14 +1478,16 @@ export default function Home() {
                     <span>GitHub</span>
                   </a>
 
-                  <a
-                    href="tel:+251938169557"
-                    className="hover:text-pink-400 transition-colors duration-300 flex items-center space-x-2"
-                    aria-label="Phone"
-                  >
-                    <i className="fas fa-phone"></i>
-                    <span>Phone</span>
-                  </a>
+                  {profileInfo.phone && (
+                    <a
+                      href={`tel:${profileInfo.phone}`}
+                      className="hover:text-pink-400 transition-colors duration-300 flex items-center space-x-2"
+                      aria-label="Phone"
+                    >
+                      <i className="fas fa-phone"></i>
+                      <span>Phone</span>
+                    </a>
+                  )}
                 </div>
               </div>
             </footer>
@@ -1392,6 +1561,24 @@ export default function Home() {
             setShowEditModal(false);
             setEditingProject(null);
           }}
+        />
+      )}
+
+      {/* Edit Profile Modal */}
+      {showEditProfileModal && (
+        <EditProfileModal
+          profile={profileInfo}
+          onSave={handleSaveProfile}
+          onCancel={() => setShowEditProfileModal(false)}
+        />
+      )}
+
+      {/* Profile Password Modal */}
+      {showProfilePasswordModal && (
+        <PasswordModal
+          action="edit"
+          onSuccess={handleProfilePasswordSuccess}
+          onCancel={() => setShowProfilePasswordModal(false)}
         />
       )}
     </>
