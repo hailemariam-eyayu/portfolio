@@ -1026,103 +1026,63 @@ export default function Home() {
                 <div className="max-w-6xl mx-auto" data-aos="fade-up">
                   <div className="text-center mb-12">
                     <h2 className="text-4xl md:text-5xl font-bold mb-4">
-                      Skills & <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Expertise</span>
+                      Skills &amp; <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Expertise</span>
                     </h2>
                     <div className="w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 mx-auto rounded-full"></div>
                   </div>
-              
-                  {/* Languages & Frameworks */}
-                  <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-8 mb-8 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <h4 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                      <span className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center mr-3">
-                        <i className="fas fa-code text-white"></i>
-                      </span>
-                      Languages & Frameworks
-                    </h4>
-                <div className="space-y-4">
-                  {[
-                    { name: "JavaScript / TypeScript", level: 90, color: "bg-yellow-500" },
-                    { name: "React & Next.js", level: 85, color: "bg-blue-500" },
-                    { name: "Node.js & Express", level: 80, color: "bg-green-500" },
-                    { name: "PHP & Laravel", level: 75, color: "bg-purple-500" },
-                    { name: "Dart & Flutter", level: 70, color: "bg-cyan-500" },
-                  ].map((skill) => (
-                    <div key={skill.name} className="group">
-                      <div className="flex justify-between mb-1">
-                        <span className="text-sm font-medium text-gray-700">{skill.name}</span>
-                        <span className="text-sm font-semibold text-gray-600">{skill.level}%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                        <div
-                          className={`${skill.color} h-3 rounded-full transition-all duration-1000 ease-out group-hover:opacity-80`}
-                          style={{ width: mounted ? `${skill.level}%` : "0%" }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
 
-              {/* Mobile Development */}
-              <div className="mb-8">
-                <h4 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                  <span className="bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm mr-3">
-                    Mobile Development
-                  </span>
-                </h4>
-                <div className="space-y-4">
+                  {/* Skill cards — horizontal badge grid */}
                   {[
-                    { name: "React Native & Expo", level: 85, color: "bg-blue-600" },
-                    { name: "Flutter", level: 70, color: "bg-cyan-600" },
-                    { name: "Cross-platform Development", level: 80, color: "bg-indigo-600" },
-                    { name: "Mobile UI/UX Design", level: 75, color: "bg-pink-600" },
-                  ].map((skill) => (
-                    <div key={skill.name} className="group">
-                      <div className="flex justify-between mb-1">
-                        <span className="text-sm font-medium text-gray-700">{skill.name}</span>
-                        <span className="text-sm font-semibold text-gray-600">{skill.level}%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                        <div
-                          className={`${skill.color} h-3 rounded-full transition-all duration-1000 ease-out group-hover:opacity-80`}
-                          style={{ width: mounted ? `${skill.level}%` : "0%" }}
-                        />
+                    {
+                      title: 'Languages & Frameworks',
+                      icon: 'fa-code',
+                      color: 'from-blue-500 to-purple-500',
+                      bg: 'from-blue-50 to-purple-50',
+                      border: 'border-blue-200',
+                      badge: 'bg-blue-100 text-blue-700',
+                      skills: ['JavaScript','TypeScript','React','Next.js','Node.js','Express','PHP','Laravel','Dart','Flutter'],
+                    },
+                    {
+                      title: 'Mobile Development',
+                      icon: 'fa-mobile-alt',
+                      color: 'from-green-500 to-teal-500',
+                      bg: 'from-green-50 to-teal-50',
+                      border: 'border-green-200',
+                      badge: 'bg-green-100 text-green-700',
+                      skills: ['Flutter','React Native','Expo','Dart','Android','iOS','Cross-platform','Mobile UI/UX'],
+                    },
+                    {
+                      title: 'Databases & DevOps',
+                      icon: 'fa-database',
+                      color: 'from-orange-500 to-red-500',
+                      bg: 'from-orange-50 to-red-50',
+                      border: 'border-orange-200',
+                      badge: 'bg-orange-100 text-orange-700',
+                      skills: ['MongoDB','MySQL','PostgreSQL','SQLite','Git','GitHub','CI/CD','Vercel','Docker','REST API'],
+                    },
+                  ].map((cat) => (
+                    <div
+                      key={cat.title}
+                      className={`bg-gradient-to-br ${cat.bg} rounded-2xl p-6 mb-6 shadow-lg hover:shadow-xl transition-shadow duration-300 border ${cat.border}`}
+                    >
+                      <h4 className="text-xl font-bold text-gray-800 mb-5 flex items-center gap-3">
+                        <span className={`w-9 h-9 bg-gradient-to-r ${cat.color} rounded-lg flex items-center justify-center`}>
+                          <i className={`fas ${cat.icon} text-white text-sm`}></i>
+                        </span>
+                        {cat.title}
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {cat.skills.map((skill) => (
+                          <span
+                            key={skill}
+                            className={`px-3 py-1.5 ${cat.badge} rounded-full text-sm font-medium border ${cat.border} hover:shadow-md transition-shadow duration-200`}
+                          >
+                            {skill}
+                          </span>
+                        ))}
                       </div>
                     </div>
                   ))}
-                </div>
-              </div>
-
-              {/* Databases & Tools */}
-              <div className="mb-8">
-                <h4 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                  <span className="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-sm mr-3">
-                    Databases & DevOps
-                  </span>
-                </h4>
-                <div className="space-y-4">
-                  {[
-                    { name: "MongoDB", level: 80, color: "bg-green-600" },
-                    { name: "MySQL", level: 75, color: "bg-blue-700" },
-                    { name: "Git & GitHub", level: 90, color: "bg-gray-700" },
-                    { name: "CI/CD (GitHub Actions)", level: 75, color: "bg-purple-600" },
-                    { name: "Vercel & Cloud Deployment", level: 80, color: "bg-black" },
-                  ].map((skill) => (
-                    <div key={skill.name} className="group">
-                      <div className="flex justify-between mb-1">
-                        <span className="text-sm font-medium text-gray-700">{skill.name}</span>
-                        <span className="text-sm font-semibold text-gray-600">{skill.level}%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                        <div
-                          className={`${skill.color} h-3 rounded-full transition-all duration-1000 ease-out group-hover:opacity-80`}
-                          style={{ width: mounted ? `${skill.level}%` : "0%" }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
                 </div>
               </div>
             </section>
