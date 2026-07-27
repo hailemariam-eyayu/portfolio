@@ -185,6 +185,14 @@ const EditSkillsModal = ({
     </div>
   );
 };
+// ── Social link type ───────────────────────────────────────────────────────────
+interface SocialLinkItem {
+  id: string;
+  name: string;
+  icon: string;   // Font Awesome class e.g. "fab fa-linkedin" or emoji
+  url: string;
+}
+
 interface ProfileInfo {
   name: string;
   tagline: string;
@@ -197,6 +205,7 @@ interface ProfileInfo {
   imageUrl: string;
   cvUrl: string;
   location: string;
+  socialLinks: SocialLinkItem[];
 }
 
 const DEFAULT_PROFILE: ProfileInfo = {
@@ -211,6 +220,11 @@ const DEFAULT_PROFILE: ProfileInfo = {
   imageUrl: "/images/HME.png",
   cvUrl: "https://www.canva.com/design/DAGs2oZ685w/K_xVgJR2cBqwF32pHDof0g/edit?utm_content=DAGs2oZ685w&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton",
   location: "Addis Ababa, Ethiopia",
+  socialLinks: [
+    { id: '1', name: 'GitHub',   icon: 'fab fa-github',   url: 'https://github.com/hailemariam-eyayu' },
+    { id: '2', name: 'Telegram', icon: 'fab fa-telegram', url: 'https://t.me/HaileEden' },
+    { id: '3', name: 'LinkedIn', icon: 'fab fa-linkedin', url: 'https://linkedin.com/in/hailemariam-eyayu' },
+  ],
 };
 
 // ── Edit Profile Modal ─────────────────────────────────────────────────────────
@@ -223,16 +237,28 @@ const EditProfileModal = ({
   onSave: (p: ProfileInfo) => void;
   onCancel: () => void;
 }) => {
-  const [form, setForm] = useState<ProfileInfo>({ ...profile });
+  const [form, setForm] = useState<ProfileInfo>({ ...profile, socialLinks: [...(profile.socialLinks || [])] });
+  const [newLink, setNewLink] = useState({ name: '', icon: '', url: '' });
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = () => {
-      setForm((prev) => ({ ...prev, imageUrl: reader.result as string }));
-    };
+    reader.onload = () => setForm((prev) => ({ ...prev, imageUrl: reader.result as string }));
     reader.readAsDataURL(file);
+  };
+
+  const addSocialLink = () => {
+    if (!newLink.name.trim() || !newLink.url.trim()) return;
+    setForm((p) => ({
+      ...p,
+      socialLinks: [...(p.socialLinks || []), { ...newLink, id: Date.now().toString() }],
+    }));
+    setNewLink({ name: '', icon: '', url: '' });
+  };
+
+  const removeSocialLink = (id: string) => {
+    setForm((p) => ({ ...p, socialLinks: (p.socialLinks || []).filter((l) => l.id !== id) }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -242,29 +268,32 @@ const EditProfileModal = ({
 
   const field = (
     label: string,
-    key: keyof ProfileInfo,
+    key: keyof Omit<ProfileInfo, 'socialLinks'>,
     type: string = "text",
     rows?: number
-  ) => (
-    <div key={key}>
-      <label className="block text-gray-700 font-semibold mb-1 text-sm">{label}</label>
-      {rows ? (
-        <textarea
-          rows={rows}
-          value={form[key]}
-          onChange={(e) => setForm({ ...form, [key]: e.target.value })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm resize-none"
-        />
-      ) : (
-        <input
-          type={type}
-          value={form[key]}
-          onChange={(e) => setForm({ ...form, [key]: e.target.value })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-        />
-      )}
-    </div>
-  );
+  ) => {
+    const val = form[key] as string;
+    return (
+      <div key={key}>
+        <label className="block text-gray-700 font-semibold mb-1 text-sm">{label}</label>
+        {rows ? (
+          <textarea
+            rows={rows}
+            value={val}
+            onChange={(e) => setForm({ ...form, [key]: e.target.value })}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm resize-none"
+          />
+        ) : (
+          <input
+            type={type}
+            value={val}
+            onChange={(e) => setForm({ ...form, [key]: e.target.value })}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+          />
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-4">
@@ -317,6 +346,35 @@ const EditProfileModal = ({
                 <p className="text-xs text-gray-400 mt-1">JPG, PNG, WEBP — stored locally</p>
               </div>
             </div>
+          </div>
+
+          {/* Social Links Manager */}
+          <div>
+            <label className="block text-gray-700 font-semibold mb-2 text-sm">Social Links</label>
+            <div className="space-y-2 mb-3">
+              {(form.socialLinks || []).map((link) => (
+                <div key={link.id} className="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200">
+                  <i className={`${link.icon} text-gray-500 w-4 text-center`}></i>
+                  <span className="font-medium text-sm text-gray-700 w-20 flex-shrink-0">{link.name}</span>
+                  <span className="flex-1 text-xs text-gray-500 truncate">{link.url}</span>
+                  <button type="button" onClick={() => removeSocialLink(link.id)}
+                    className="text-red-400 hover:text-red-600 text-sm font-bold flex-shrink-0">✕</button>
+                </div>
+              ))}
+            </div>
+            <div className="grid grid-cols-3 gap-2 mb-2">
+              <input value={newLink.name} onChange={(e) => setNewLink((p) => ({ ...p, name: e.target.value }))}
+                placeholder="Name" className="px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none" />
+              <input value={newLink.icon} onChange={(e) => setNewLink((p) => ({ ...p, icon: e.target.value }))}
+                placeholder="Icon class / emoji" className="px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none" />
+              <input value={newLink.url} onChange={(e) => setNewLink((p) => ({ ...p, url: e.target.value }))}
+                placeholder="https://..." className="px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none" />
+            </div>
+            <p className="text-xs text-gray-400 mb-2">Icon: fab fa-linkedin · fab fa-github · fab fa-telegram · or emoji 🔗</p>
+            <button type="button" onClick={addSocialLink}
+              className="text-sm bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-1.5 rounded-lg font-medium hover:shadow-md transition-all">
+              + Add Link
+            </button>
           </div>
 
           <div className="flex gap-3 pt-2">
@@ -1109,33 +1167,29 @@ export default function Home() {
                       </a>
                     </div>
                     
-                    {/* Social Links */}
-                    <div className="flex gap-4 mt-8 justify-center md:justify-start">
-                      <a
-                        href={profileInfo.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300"
-                        title="GitHub"
-                      >
-                        <i className="fab fa-github text-gray-800 text-xl"></i>
-                      </a>
-                      <a
-                        href={profileInfo.telegram}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300"
-                        title="Telegram"
-                      >
-                        <i className="fab fa-telegram text-blue-500 text-xl"></i>
-                      </a>
-                      <a
-                        href={`mailto:${profileInfo.email}`}
-                        className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300"
-                        title="Email"
-                      >
-                        <i className="fas fa-envelope text-red-500 text-xl"></i>
-                      </a>
+                    {/* Social Links — from profileInfo.socialLinks */}
+                    <div className="flex gap-4 mt-8 justify-center md:justify-start flex-wrap">
+                      {(profileInfo.socialLinks || []).map((link) => (
+                        <a
+                          key={link.id}
+                          href={link.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300"
+                          title={link.name}
+                        >
+                          <i className={`${link.icon} text-xl`} style={{ color: 'inherit' }}></i>
+                        </a>
+                      ))}
+                      {profileInfo.email && (
+                        <a
+                          href={`mailto:${profileInfo.email}`}
+                          className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300"
+                          title="Email"
+                        >
+                          <i className="fas fa-envelope text-red-500 text-xl"></i>
+                        </a>
+                      )}
                       {profileInfo.phone && (
                         <a
                           href={`tel:${profileInfo.phone}`}
@@ -1145,7 +1199,7 @@ export default function Home() {
                           <i className="fas fa-phone text-green-500 text-xl"></i>
                         </a>
                       )}
-                      {/* Edit Profile button — always visible so you can reach admin */}
+                      {/* Edit Profile button */}
                       <button
                         onClick={handleEditProfileClick}
                         className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300"
@@ -1618,46 +1672,24 @@ export default function Home() {
                   &copy; {new Date().getFullYear()} {profileInfo.name}. All rights reserved.
                 </p>
 
-                <div className="space-x-6 mt-4 md:mt-0 flex">
-                  <a
-                    href={`mailto:${profileInfo.email}`}
-                    className="hover:text-pink-400 transition-colors duration-300 flex items-center space-x-2"
-                    aria-label="Email"
-                  >
-                    <i className="fas fa-envelope"></i>
-                    <span>Email</span>
-                  </a>
-
-                  <a
-                    href={profileInfo.telegram}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-pink-400 transition-colors duration-300 flex items-center space-x-2"
-                    aria-label="Telegram"
-                  >
-                    <i className="fab fa-telegram"></i>
-                    <span>Telegram</span>
-                  </a>
-
-                  <a
-                    href={profileInfo.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-pink-400 transition-colors duration-300 flex items-center space-x-2"
-                    aria-label="GitHub"
-                  >
-                    <i className="fab fa-github"></i>
-                    <span>GitHub</span>
-                  </a>
-
-                  {profileInfo.phone && (
+                <div className="space-x-6 mt-4 md:mt-0 flex flex-wrap gap-y-2">
+                  {(profileInfo.socialLinks || []).map((link) => (
                     <a
-                      href={`tel:${profileInfo.phone}`}
+                      key={link.id}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="hover:text-pink-400 transition-colors duration-300 flex items-center space-x-2"
-                      aria-label="Phone"
                     >
-                      <i className="fas fa-phone"></i>
-                      <span>Phone</span>
+                      <i className={link.icon}></i>
+                      <span>{link.name}</span>
+                    </a>
+                  ))}
+                  {profileInfo.email && (
+                    <a href={`mailto:${profileInfo.email}`}
+                      className="hover:text-pink-400 transition-colors duration-300 flex items-center space-x-2">
+                      <i className="fas fa-envelope"></i>
+                      <span>Email</span>
                     </a>
                   )}
                 </div>
