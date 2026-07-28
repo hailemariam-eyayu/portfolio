@@ -761,6 +761,98 @@ const PasswordModal = ({ onSuccess, onCancel, action = "edit" }: {
   );
 };
 
+// ── Contact Form ───────────────────────────────────────────────────────────────
+const ContactForm = () => {
+  const [form, setForm] = React.useState({ name: '', email: '', message: '' });
+  const [status, setStatus] = React.useState<'idle'|'loading'|'success'|'error'>('idle');
+  const [errMsg, setErrMsg] = React.useState('');
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) => {
+    setForm(p => ({ ...p, [e.target.name]: e.target.value }));
+    if (status !== 'idle') setStatus('idle');
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.name.trim() || !form.email.trim() || !form.message.trim()) return;
+    setStatus('loading');
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) {
+        const d = await res.json().catch(() => ({}));
+        throw new Error(d.error || 'Failed to send');
+      }
+      setStatus('success');
+      setForm({ name: '', email: '', message: '' });
+    } catch (err) {
+      setStatus('error');
+      setErrMsg(err instanceof Error ? err.message : 'Something went wrong');
+    }
+  };
+
+  const inputClass = "w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 text-sm transition-all duration-200";
+
+  return (
+    <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-xl p-8 space-y-5 border border-gray-100">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-1.5">Your Name</label>
+          <input name="name" type="text" required value={form.name} onChange={handleChange}
+            placeholder="Hailemariam Eyayu" className={inputClass} />
+        </div>
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-1.5">Email Address</label>
+          <input name="email" type="email" required value={form.email} onChange={handleChange}
+            placeholder="you@example.com" className={inputClass} />
+        </div>
+      </div>
+      <div>
+        <label className="block text-sm font-semibold text-gray-700 mb-1.5">Message</label>
+        <textarea name="message" required rows={5} value={form.message} onChange={handleChange}
+          placeholder="Tell me about your project or idea..."
+          className={`${inputClass} resize-none`} />
+      </div>
+
+      {status === 'success' && (
+        <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-xl px-4 py-3">
+          <span className="text-xl">✅</span>
+          <p className="text-green-700 text-sm font-medium">Message sent! I&apos;ll get back to you soon.</p>
+        </div>
+      )}
+      {status === 'error' && (
+        <div className="flex items-center gap-3 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+          <span className="text-xl">❌</span>
+          <p className="text-red-600 text-sm">{errMsg}</p>
+        </div>
+      )}
+
+      <button type="submit" disabled={status === 'loading'}
+        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3.5 rounded-xl font-semibold hover:shadow-xl hover:scale-[1.01] transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100">
+        {status === 'loading' ? (
+          <>
+            <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+            </svg>
+            Sending...
+          </>
+        ) : (
+          <>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+            </svg>
+            Send Message
+          </>
+        )}
+      </button>
+    </form>
+  );
+};
+
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -1614,56 +1706,20 @@ export default function Home() {
               </ul>
             </section>
 
-           <section className="w-[50%] mx-auto">
+           <section id="contact" className="py-20 bg-white">
+              <div className="container mx-auto px-4">
+                <div className="max-w-2xl mx-auto" data-aos="fade-up">
+                  <div className="text-center mb-10">
+                    <h2 className="text-4xl md:text-5xl font-bold mb-4">
+                      Get In <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Touch</span>
+                    </h2>
+                    <div className="w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 mx-auto rounded-full mb-4"></div>
+                    <p className="text-gray-600">Have a project in mind? I&apos;d love to hear from you.</p>
+                  </div>
 
-              <form
-                action="https://formspree.io/f/xjkwqorb"
-                method="POST"
-                className="needs-validation"
-              >
-                <div className="mb-3">
-                  <label htmlFor="name" className="form-label fw-semibold">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    id="name"
-                    required
-                    className="form-control"
-                  />
+                  <ContactForm />
                 </div>
-
-                <div className="mb-3">
-                  <label htmlFor="email" className="form-label fw-semibold">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    id="email"
-                    required
-                    className="form-control"
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="message" className="form-label fw-semibold">
-                    Message
-                  </label>
-                  <textarea
-                    name="message"
-                    id="message"
-                    rows={4}
-                    required
-                    className="form-control"
-                  ></textarea>
-                </div>
-
-                <button type="submit" className="btn btn-primary">
-                  Send Message
-                </button>
-              </form>
+              </div>
             </section>
 
             <footer className="w-full bg-gradient-to-r from-indigo-900 via-purple-900 to-pink-900 text-gray-100 py-6 mt-12">
